@@ -380,17 +380,17 @@ them during the handover.</p>
 research question, data, and design, in that order — so you know
 <em>what</em> we are doing, on <em>what data</em>, and
 <em>why</em>.</li>
-<li><strong>§5 (data &amp; licensing)</strong> and <strong>§6
+<li><strong>§7 (data &amp; licensing)</strong> and <strong>§8
 (paperwork)</strong> — so you understand what you may and may not do
 with the data, and what you must sign <strong>before</strong> touching
 it.</li>
-<li><strong>§4 (repo tour)</strong> + <strong>§7 (how to run the
+<li><strong>§4 (repo tour)</strong> + <strong>§9 (how to run the
 code)</strong> — so you can orient in the codebase.</li>
-<li>Skim <strong>§8 (conventions)</strong>, <strong>§10–11
-(git/Overleaf)</strong>, <strong>§12 (Claude Code)</strong>.</li>
+<li>Skim <strong>§10 (conventions)</strong>, <strong>§12–13
+(git/Overleaf)</strong>, <strong>§14 (Claude Code)</strong>.</li>
 </ol>
 <p><strong>Do this before touching any licensed data</strong> (details
-in §6):</p>
+in §8):</p>
 <ul>
 <li>Get added to the Special Licence as an additional researcher and
 <strong>wait for UK Data Service approval</strong>.</li>
@@ -400,24 +400,24 @@ data-handling/security guide.</li>
 machine.</li>
 </ul>
 <p><strong>For EUL work — the only tier we currently have access to
-(§5.1) — once you’re an approved project member:</strong></p>
+(§7.1) — once you’re an approved project member:</strong></p>
 <ul>
 <li>You do <strong>not</strong> need to download anything from UKDS
 yourself. The EUL data (SN 6614 main study, SN 8644 COVID study) already
 lives in the team’s shared Dropbox project folder — get added to that
-Dropbox folder and it will sync to your machine (§5.2).</li>
+Dropbox folder and it will sync to your machine (§7.2).</li>
 <li><strong>Before running any code</strong>, add your own username
 branch to <code>code/lib/config.R</code> so the pipeline can find your
-local synced copy — full steps in §5.4. Then confirm it worked with
+local synced copy — full steps in §7.4. Then confirm it worked with
 <code>source(&quot;code/run/00_check_inputs.R&quot;)</code>.</li>
 </ul>
 <p><strong>The two rules that matter most</strong> — note the two
-licence tiers are governed differently (see §5.5 for the full
+licence tiers are governed differently (see §7.5 for the full
 version):</p>
 <ul>
 <li><strong>Special Licence (SL) data</strong> — the detailed SIC/SOC
 and Local Authority data — may <strong>only</strong> be stored and
-processed on the approved secure machine (§7). It never touches a
+processed on the approved secure machine (§9). It never touches a
 personal laptop, Dropbox, email, or an AI tool.</li>
 <li><strong>End User Licence (EUL) data</strong> may live in your normal
 Dropbox-synced project folder and on a personal laptop — that’s allowed
@@ -425,7 +425,7 @@ by the licence. The constraint on EUL data is narrower but still
 absolute: <strong>it must never be readable by an AI coding
 tool</strong> (Claude Code, Codex, ChatGPT, etc.). In practice that
 means keeping the EUL raw/derived data folder <strong>out of the sync
-scope of whatever machine you run AI tools on</strong> — see §12 for how
+scope of whatever machine you run AI tools on</strong> — see §14 for how
 this is actually set up.</li>
 </ul>
 <hr />
@@ -622,7 +622,7 @@ underlying SIC/SOC-based classification as Step 1, just used here as
 instrument components rather than as treatment. - <span class="math inline">\(R_{\ell(c)}\)</span> is the local-restriction
 intensity (school closures, workplace/social restrictions) in couple
 <span class="math inline">\(c\)</span>’s Local Authority District <span class="math inline">\(\ell(c)\)</span> at the time of interview —
-requires the Special-Licence LAD identifiers (§5.1) and the IFS
+requires the Special-Licence LAD identifiers (§7.1) and the IFS
 restrictions linkage (see “Data linkage” below). - <span class="math inline">\(Z_c \times R_{\ell(c)}\)</span> lets the same
 pre-pandemic job imply different realised work-location outcomes
 depending on how binding local restrictions were at the time. - <span class="math inline">\(\lambda_{s,i}\)</span> (second stage) is the
@@ -633,7 +633,7 @@ collinear with the excluded instruments; <span class="math inline">\(X_c\)</span
 vector in each stage.</p>
 <p>This design is <strong>not yet built</strong> in <code>code/</code>;
 the SL Local Authority data (SN 6666) and the IFS restrictions linkage
-need to be wired in first (see §13).</p>
+need to be wired in first (see §15).</p>
 <p><strong>Data linkage.</strong> Local Authority District identifiers
 (Special Licence only) link households to the <strong>IFS COVID-19
 Restrictions Dataset</strong> (school closures, workplace/social
@@ -715,7 +715,7 @@ calendar months rather than a regular monthly grid</td>
 <tr class="even">
 <td>Study number</td>
 <td>SN 6614 (EUL) / SN 6931 (SL)</td>
-<td>SN 8644 (same under either licence, see §5.1)</td>
+<td>SN 8644 (same under either licence, see §7.1)</td>
 </tr>
 <tr class="odd">
 <td>Relevant code</td>
@@ -757,11 +757,18 @@ two are never silently pooled.</p>
 <ul>
 <li><strong>Baseline (pre-COVID) information</strong> — both partners’
 industry/occupation, age, education, children, region — is built from
-the <strong>main survey</strong>, using whichever of waves <strong>I/J/K
-(Waves 9/10/11)</strong> gives each person their most recent interview,
-prioritizing a <strong>2019</strong> interview date (people are
-interviewed at different points across a wave’s ~2-year fieldwork
-window, so “2019” isn’t the same wave letter for everyone).</li>
+the <strong>main survey</strong>, restricted to interviews that actually
+took place <strong>in 2019</strong>. Waves <strong>I/J/K (Waves
+9/10/11)</strong> are the only main-study waves whose ~2-year fieldwork
+window overlaps 2019 at all, so they’re the only candidates; within
+that, each person’s baseline is their <strong>latest</strong> wave (K
+over J over I) among whichever of I/J/K happened to interview them in
+2019 specifically — not simply “their most recent interview regardless
+of year.” A wave-K interview that actually took place in 2018 (fieldwork
+windows straddle calendar years) is not used as someone’s baseline; that
+person is currently just outside the baseline sample. See §5.1’s
+<code>01_build_data.R</code> row and §2.4 for how this plays out
+downstream, and the note below on the 2018-fallback exploration.</li>
 <li><strong>Pre-baseline history</strong> (waves
 <code>a</code>–<code>k</code>) is used for pre-trend checks and
 longer-run controls.</li>
@@ -776,6 +783,31 @@ currently restricts to people/couples also observed in the COVID sample
 (<code>code/lib/future_outcomes.R</code>). We had some troubles with
 things looking different in the main survey vs. the COVID sample results
 in the periods where they overlap.</li>
+</ul>
+<p><strong>Exploration: expanding the baseline with a 2018
+fallback.</strong> Because the production baseline is 2019-only, anyone
+whose I/J/K interview fell in 2018 instead (or who wasn’t employed/valid
+in 2019) is currently excluded — this exploration asks how many
+additional couples would be recovered by allowing <strong>2018 as a
+fallback year</strong>. The rule under test: use 2019 if both spouses
+are observed, employed, and have valid SIC <em>and</em> SOC that year;
+otherwise fall back to 2018 if both qualify there; within a year, still
+prefer the latest available wave (<code>k &gt; j &gt; i &gt; h</code>;
+waves <code>h</code>/<code>i</code>/<code>j</code> are the 2018
+candidates, <code>i</code>/<code>j</code>/<code>k</code> the 2019 ones).
+This is exploratory, not yet the production baseline.</p>
+<ul>
+<li><strong>Script:</strong>
+<code>code/explore_baseline_year_2018_2019.R</code> (top-level
+<code>code/</code>, not <code>code/run/</code> — it’s exploratory, not
+part of the staged pipeline).</li>
+<li><strong>Results:</strong> already integrated into
+<code>couples_graphs_short.tex</code>’s “Appendix: 2018 baseline
+fallback” section — a design slide, an observation-gain figure, and
+side-by-side couple counts (2019-only vs. 2018–2019 combined) for both
+the COVID waves and the main-study years. The figures live under
+<code>figures/explore/baseline_year_check/</code> (the
+<code>\blcdir</code> macro in the <code>.tex</code>).</li>
 </ul>
 </div>
 <div id="file-types-per-wave-and-identifiers" class="section level3">
@@ -824,7 +856,7 @@ throughout <code>code/lib/</code>.</p>
 <h3>2.4 Datasets and samples built by the pipeline</h3>
 <p><code>code/run/01_build_data.R</code> is the single script that turns
 the raw wave files into everything downstream. It writes to two separate
-output roots (§5.4), and the distinction between them matters:</p>
+output roots (§7.4), and the distinction between them matters:</p>
 <ul>
 <li><strong><code>derived/</code></strong> (<code>der_path</code>) —
 every intermediate and full-population dataset the pipeline produces
@@ -868,7 +900,18 @@ and history-based controls.</li>
 <li><code>df_sample_long_covid.rds</code> — the full <strong>person ×
 COVID-wave</strong> panel (<code>ca</code>–<code>ci</code>) for
 baseline-analytic people, built from the merged COVID waves
-(<code>covid_all_wide.rds</code>).</li>
+(<code>covid_all_wide.rds</code>) by
+<code>build_covid_long_panel()</code>
+(<code>code/lib/covid_panel.R</code>). Building this panel also
+<strong>adds two synthetic pre-pandemic rows per person</strong>:
+<code>wave == &quot;2019&quot;</code> (from the main-survey baseline) and
+<code>wave == &quot;baseline&quot;</code> (from a Jan–Feb-2020 recall question
+that UKHLS actually repeated across several early COVID waves — each
+person’s <strong>earliest valid answer, in wave order</strong>, is the
+one used) — so the panel has a usable pre-period before the real
+<code>ca</code>–<code>ci</code> waves start; see §6.7 for exactly how
+each is constructed, how the repeated-recall answers are prioritized,
+and why there are two.</li>
 <li><code>future_outcomes_long_lmo.rds</code> (+ <code>_monthly</code>
 variant) — the <strong>person × main-survey follow-up wave</strong>
 panel (waves <code>l</code>–<code>o</code>), restricted to the
@@ -1114,13 +1157,1217 @@ CLAUDE.md, AGENTS.md   agent guidance; ONBOARDING.md   this file</code></pre>
 </table>
 <hr />
 </div>
+<div id="run-scripts-and-flags-in-detail" class="section level2">
+<h2>5. Run scripts and flags in detail</h2>
+<p><code>code/run/00_master.R</code> gives the execution order; this
+section goes one level deeper — what each script actually does, what it
+reads/writes, when you’d edit it — and then inventories every
+flag/constant worth knowing about, since these are the levers you can
+pull without touching the underlying logic.</p>
+<p>Note what these scripts <em>don’t</em> contain: real function
+definitions. That split is deliberate and enforced throughout the repo —
+see the “functions belong in <code>code/lib/</code>” convention in §10 —
+which is why every “Edit it when…” cell below usually points you at a
+<code>code/lib/</code> file alongside (or instead of) the run script
+itself.</p>
+<div id="run-scripts-one-by-one" class="section level3">
+<h3>5.1 Run scripts, one by one</h3>
+<table>
+<colgroup>
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Script</th>
+<th>What it does</th>
+<th>Reads</th>
+<th>Writes</th>
+<th>Edit it when…</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>00_check_inputs.R</code></td>
+<td>Pre-flight check: confirms required libs/run scripts, policy files,
+raw main/COVID wave files, and output folders all exist; prints a
+per-wave completeness report</td>
+<td>raw wave files under <code>path_main</code>/<code>path_covid</code>;
+<code>policies/</code></td>
+<td>nothing (creates output folders if missing)</td>
+<td>You add a new required policy file, a new wave range, or a new
+<code>code/lib/</code> file that later scripts depend on.</td>
+</tr>
+<tr class="even">
+<td><code>00_master.R</code></td>
+<td>Orchestrates every stage below in its own fresh environment
+(<code>run_stage()</code>), so large objects from one stage don’t leak
+into the next</td>
+<td>—</td>
+<td>—</td>
+<td>You add a new stage script, want to skip stages during debugging
+(<code>RUN_*</code> flags, §5.2), or change the stage order.</td>
+</tr>
+<tr class="odd">
+<td><code>01_build_data.R</code></td>
+<td>Builds the baseline composite, pre-baseline history, COVID long
+panel, future outcomes, all couple-level files, and the four
+<code>s2019_*</code> analytic samples — the one script that produces
+almost everything else reads. Full walkthrough of what it builds is in
+§2.4.</td>
+<td>raw main/COVID wave files; <code>policies/</code></td>
+<td>everything under <code>derived/</code> and <code>samples/</code>
+(§2.4)</td>
+<td>You add a new baseline variable, a new outcome that needs to exist
+in the couple-level files, or change a sample restriction (e.g. the
+baseline <code>jbstat</code> filter, the heterosexual-couple
+restriction). Almost every other run script depends on this one’s
+outputs, so changes here ripple everywhere — treat it as the
+highest-leverage, highest-care file in <code>code/run/</code>.</td>
+</tr>
+<tr class="even">
+<td><code>02_make_descriptives.R</code></td>
+<td><strong>Individual-level</strong> (not couple-level — plain person
+rows, not the wife/husband-side-by-side couple files) COVID-sample
+descriptive figures: worked-at-all / work-status / furlough / WFH bar
+charts by industry-group (April/May 2020), plus over-time versions
+(housework, childcare, work-from-home, furlough,
+work-schedule-adapted-for-childcare) and
+keyworker-definition-vs-self-report comparison figures. Mainly a tool
+for <strong>exploring and sanity-checking variables</strong>, not for
+producing the couple-treatment research exhibits used in slides — those
+come from <code>02d</code>/<code>02e</code> instead.</td>
+<td><code>df_sample_long_covid.rds</code>,
+<code>df_sample_long_covid_couples.rds</code></td>
+<td><code>figures/descriptives/covid/</code></td>
+<td>You want a new COVID-wave exploratory figure, or need to change the
+minimum-cell-size disclosure threshold (<code>MIN_N_DEFAULT</code>,
+§5.2).</td>
+</tr>
+<tr class="odd">
+<td><code>02b_make_future_descriptives.R</code></td>
+<td><strong>Individual-level</strong>, same spirit as
+<code>02_make_descriptives.R</code> but for post-COVID main-survey
+follow-up outcomes: mean/share trends, categorical distributions,
+faceted-by-group versions, plus a small set of hand-picked figures. Also
+mainly for <strong>exploring/sanity-checking</strong> future-outcome
+variables, not final research exhibits — the couple-treatment versions
+in <code>02d</code> are what actually feed the slide decks.</td>
+<td><code>future_outcomes_long_lmo.rds</code>,
+<code>s2019_all.rds</code>, <code>s2019_couples.rds</code></td>
+<td><code>figures/descriptives/future/</code></td>
+<td>You add a new future outcome to explore, or change which variables
+count as “headline” (the <code>HEADLINE_*</code>/<code>YM_*</code>
+outcome lists, §5.2). <strong>Skipped entirely unless
+<code>MAKE_EXPLORATORY_EXTRA &lt;- TRUE</code>.</strong></td>
+</tr>
+<tr class="even">
+<td><code>02c_sample_tables.R</code></td>
+<td>Sample-composition LaTeX tables (wife×husband industry-group
+crosstabs at 3×3 and 5×5 resolution, youngest-child-age tables,
+treatment×child-age balance tables) and couple-composition figures
+(joint work-outside / WFH-some status over time), each produced for
+baseline / COVID / future / main-history-future-both-in-COVID samples,
+and repeated for the youngest-child-≤10 subsample</td>
+<td><code>s2019_baseline_couplelevel.rds</code>,
+<code>df_sample_long_covid_couplelevel.rds</code>,
+<code>future_outcomes_couple_long_lmo.rds</code>,
+<code>couple_history_future_mainonly_long_both_in_covid.rds</code></td>
+<td><code>tables/sample_table_*.tex</code>,
+<code>figures/sample_composition/</code></td>
+<td>You add a new treatment variable to the balance tables
+(<code>BALANCE_TREATMENT_VARS</code>), or need a new sample cut beyond
+“all” / “youngest child ≤10”.</td>
+</tr>
+<tr class="odd">
+<td><code>02d_make_couple_treatment_descriptives.R</code></td>
+<td>The main couple-treatment descriptive figures —
+<strong>couple-level</strong>, and the actual research exhibits (not
+exploratory): by-treatment-group trends over time for COVID outcomes,
+future outcomes, and main-survey history+future outcomes, in both
+“spouse-facet” and “child-age-grid” layouts, plus couple counts by
+treatment group</td>
+<td><code>df_sample_long_covid_couplelevel.rds</code>,
+<code>future_outcomes_couple_long_lmo.rds</code> (+
+<code>_monthly</code>),
+<code>couple_history_future_mainonly_long*.rds</code></td>
+<td><code>figures/couple_treatment/{covid_childgrids,future_childgrids,history_future_childgrids,spousefacets,counts}/</code></td>
+<td>You add a new outcome to
+<code>COVID_OUTCOMES</code>/<code>FUTURE_OUTCOMES</code>/<code>HISTORY_FUTURE_OUTCOMES</code>
+(§5.2), change the winsorization percentile, or adjust plot text sizes.
+This is the largest and most flag-driven run script — most
+<code>MAKE_*</code> config flags act on it.</td>
+</tr>
+<tr class="even">
+<td><code>02e_make_couple_baseline_descriptives.R</code></td>
+<td>Baseline-distribution figures for
+<code>couples_graphs_short.tex</code>: one 2×2 (child-age × spouse)
+panel per outcome, pooling all COVID waves for COVID-measured outcomes
+and all main-survey waves for main-survey outcomes</td>
+<td><code>df_sample_long_covid_couplelevel.rds</code>,
+<code>couple_history_future_mainonly_long.rds</code></td>
+<td><code>figures/couple_treatment/baseline_distributions/</code></td>
+<td>You add an outcome to <code>couples_graphs_short.tex</code> and need
+its baseline-distribution slide (add it to
+<code>COVID_OUTCOMES</code>/<code>MAIN_OUTCOMES</code> in this
+script).</td>
+</tr>
+<tr class="odd">
+<td><code>03a_make_couple_treatment_event_studies.R</code></td>
+<td>Runs the event-study regressions behind §1.4’s equation for every
+combination of treatment × spouse × child-age group × study
+(main/monthly-main/COVID) × controls × couple-FE, saves models,
+coefficients, and combined figures</td>
+<td><code>s2019_baseline_couplelevel*.rds</code>,
+<code>couple_history_future_mainonly*.rds</code>,
+<code>df_sample_long_covid_couplelevel.rds</code></td>
+<td><code>figures/event_studies/&lt;treatment_slug&gt;/&lt;fe_slug&gt;/</code>,
+<code>derived/event_study_results/…</code> (models, coefficient
+<code>.rds</code>/<code>.csv</code>)</td>
+<td>You add a new outcome to
+<code>MAIN_OUTCOMES</code>/<code>COVID_OUTCOMES</code>, change
+winsorization, or need a new sample variant. Uses
+<code>code/lib/event_study_regressions.R</code> for the actual
+regression logic — edit that file, not this one, if the specification
+itself needs to change.</td>
+</tr>
+<tr class="even">
+<td><code>03_models_workoutside.R</code></td>
+<td>One-off OLS regression table (April 2020 <code>workoutside</code> on
+industry/occupation/education/age, by sex) via
+<code>modelsummary</code></td>
+<td><code>df_sample_long_covid.rds</code></td>
+<td><code>tables/workoutside_industry_comparison.tex</code></td>
+<td>You want to add/remove a model column or control variable in this
+specific table. Self-contained; nothing else depends on its output
+besides the TeX decks that <code>\input{}</code> it.</td>
+</tr>
+<tr class="odd">
+<td><code>04_lasso_workoutside.R</code></td>
+<td>Exploratory: cross-validated lasso logistic regression of
+<code>workoutside</code> (April 2020) on industry×occupation
+interactions, to data-mine which cells predict work-outside status
+best</td>
+<td><code>df_sample_long_covid.rds</code></td>
+<td><code>tables/lasso_selected_terms.csv</code>,
+<code>lasso_industry_effects.csv</code>,
+<code>lasso_occupation_effects.csv</code>,
+<code>lasso_top_cells.csv</code></td>
+<td>You want to explore a different outcome or interaction set with the
+same data-driven approach (§1.4 / <code>method.tex</code> “Data driven
+approach”). Exploratory only — not part of the main design.</td>
+</tr>
+<tr class="even">
+<td><code>99_session_info.R</code></td>
+<td>Saves <code>sessionInfo()</code> for reproducibility</td>
+<td>—</td>
+<td><code>tables/sessionInfo.txt</code></td>
+<td>Essentially never; it’s a fixed reproducibility snapshot.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Ad hoc / diagnostic scripts</strong> (in
+<code>code/run/</code> but not part of the numbered pipeline, and not
+called from <code>00_master.R</code>):</p>
+<ul>
+<li><code>diagnostics_any_work_hours_figures.R</code> — quality-check
+figures for <code>any_work</code>/hours consistency (missingness,
+zero-vs-positive hours, <code>any_work==1</code> but
+<code>hours&lt;=0</code> and vice versa) across the person-level and
+couple-level COVID and future datasets. Run it whenever you’re
+suspicious about how
+<code>any_work</code>/<code>hours</code>/<code>jbhrs</code> are behaving
+after a pipeline change.</li>
+<li><code>diagnostics_telephone_survey_coverage.R</code> — the script
+behind the telephone-mode (<code>_t</code>) COVID file numbers quoted in
+§2.3 (~3–5% more observations, two waves). Reads the raw
+<code>.dta</code> files directly (must be run where
+<code>path_covid</code> is real, i.e. never on an AI-coding machine) and
+reports, per wave, whether a <code>_t</code> file exists, which
+repo-used variables it contains, and how many additional
+<code>pidp</code>s it would add. Re-run this if you ever reconsider
+incorporating the telephone-mode files.</li>
+</ul>
+</div>
+<div id="flags-and-levers-youll-actually-use" class="section level3">
+<h3>5.2 Flags and levers you’ll actually use</h3>
+<p><strong>Global switches — <code>code/lib/config.R</code></strong>
+(affect every script that sources it):</p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Flag</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>DATA_LICENSE</code></td>
+<td><code>&quot;EUL&quot;</code></td>
+<td>The master switch (§7.3 in the data-licensing section below):
+<code>&quot;EUL&quot;</code> vs <code>&quot;SL&quot;</code> redirects input paths, output
+paths, and industry/occupation variable names everywhere.</td>
+</tr>
+<tr class="even">
+<td><code>MAKE_EXPLORATORY_EXTRA</code></td>
+<td><code>FALSE</code></td>
+<td>Gates the broader/noisier figure families: extra industry-level (not
+just group-level) plots and percent-vs-count variants in
+<code>02_make_descriptives.R</code>; the coarse
+<code>group_industry_based</code> grouping (vs. only the detailed one)
+in the same script; whether <code>02b_make_future_descriptives.R</code>
+runs <strong>at all</strong>; and the “both required / not required to
+have both spouses observed” extra count variant in
+<code>02d</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>MAKE_FUTURE_ONLY_TREATMENT</code></td>
+<td><code>FALSE</code></td>
+<td>Adds future-study-wave-only couple-composition figures
+(<code>02c</code>) and future-only treatment-group count figures
+(<code>02d</code>) alongside the main history+future versions. Off by
+default because the main-history-future versions already cover this
+ground more completely.</td>
+</tr>
+<tr class="even">
+<td><code>MAKE_RESTRICTED_HUSB_NOTKEY_VARIANTS</code></td>
+<td><code>FALSE</code></td>
+<td>Adds a second, restricted comparison sample (husband not a key
+worker, or education-only) for the wife-based treatments, in both
+<code>02d</code> (descriptive figures) and <code>03a</code> (event
+studies). A robustness variant, not the headline specification.</td>
+</tr>
+<tr class="odd">
+<td><code>MAKE_WIFE_KEY_ANY_TREATMENT</code></td>
+<td><code>FALSE</code></td>
+<td>Adds <code>treat_wife_key_notedu_any</code> (wife key-worker
+non-education, <em>regardless</em> of husband) as a third treatment
+variable in <code>02d</code> and <code>03a</code>, alongside the two
+headline treatments.</td>
+</tr>
+<tr class="even">
+<td><code>MAKE_COUPLE_TREATMENT_SPOUSEFACETS</code></td>
+<td><code>FALSE</code></td>
+<td>Turns on the “spouse-facet” figure variants and standalone
+husits-distribution spousefacet figures in <code>02d</code> (the
+child-age-grid versions run regardless of this flag).</td>
+</tr>
+<tr class="odd">
+<td><code>MAKE_EVENT_STUDIES_COUPLE_FE</code></td>
+<td><code>TRUE</code></td>
+<td>Whether <code>03a</code> also runs the couple-fixed-effects version
+of every event study (in addition to no-FE). Couple FE absorbs the
+treatment main effect and any time-invariant baseline controls
+(§1.4).</td>
+</tr>
+<tr class="even">
+<td><code>MAKE_EVENT_STUDIES_BASELINE_CONTROLS</code></td>
+<td><code>TRUE</code></td>
+<td>Whether <code>03a</code>’s no-FE event studies also run a
+baseline-controls version (in addition to no-controls). Only applies to
+the no-FE arm — baseline controls are collinear with couple FE.</td>
+</tr>
+</tbody>
+</table>
+<p>Also in <code>config.R</code>: the wave-window constants that define
+the panel’s scope — <code>covid_waves</code>, <code>future_waves</code>,
+<code>history_waves</code> (§2.1), and the pay-deflation anchor
+<code>REAL_PAY_BASE_YM</code> (currently December 2019, used by
+<code>code/lib/real_pay.R</code>).</p>
+<p><strong>Stage toggles —
+<code>code/run/00_master.R</code>:</strong></p>
+<ul>
+<li><code>RUN_CHECK_INPUTS</code>, <code>RUN_BUILD_DATA</code>,
+<code>RUN_DESCRIPTIVES</code>, <code>RUN_FUTURE_DESCRIPTIVES</code>
+(defaults to <code>MAKE_EXPLORATORY_EXTRA</code>),
+<code>RUN_SAMPLE_TABLES</code>,
+<code>RUN_COUPLE_TREATMENT_DESCRIPTIVES</code>,
+<code>RUN_COUPLE_BASELINE_DESCRIPTIVES</code>,
+<code>RUN_EVENT_STUDIES</code>, <code>RUN_MODELS</code>,
+<code>RUN_LASSO</code>, <code>RUN_SESSION_INFO</code> — flip any of
+these to <code>FALSE</code> to skip that stage on a given run (e.g.
+while iterating on just one stage’s output).</li>
+<li><code>STOP_AFTER_EACH</code> (<code>FALSE</code>) — set
+<code>TRUE</code> to halt the whole run after each stage, useful for
+stepping through the pipeline while debugging.</li>
+</ul>
+<p><strong>Per-script constants worth knowing</strong> (not centralized
+in <code>config.R</code>, but the first thing to change if you need
+different behavior from a specific script):</p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant</th>
+<th>Where</th>
+<th>Default</th>
+<th>What it controls</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>MIN_N_DEFAULT</code></td>
+<td><code>02_make_descriptives.R</code></td>
+<td><code>25</code></td>
+<td>Minimum cell size before a bar is shown — a disclosure/noise
+control.</td>
+</tr>
+<tr class="even">
+<td><code>RUN_AUTO_ALL</code></td>
+<td><code>02b_make_future_descriptives.R</code></td>
+<td><code>FALSE</code></td>
+<td>Whether to also auto-generate an unfiltered “plot every future
+outcome” pass on top of the curated figures.</td>
+</tr>
+<tr class="odd">
+<td><code>HEADLINE_NUMERIC_OUTCOMES</code>,
+<code>HEADLINE_CATEGORICAL_OUTCOMES</code>,
+<code>YM_NUMERIC_OUTCOMES</code>,
+<code>YM_CATEGORICAL_OUTCOMES</code></td>
+<td><code>02b_make_future_descriptives.R</code></td>
+<td>—</td>
+<td>The actual lists of which future outcomes get plotted. Add a
+variable here to get it plotted automatically.</td>
+</tr>
+<tr class="even">
+<td><code>WINSORIZE_PCT</code></td>
+<td><code>02d</code>, <code>03a</code></td>
+<td><code>0.99</code></td>
+<td>Upper-tail winsorization percentile applied to continuous outcomes
+before plotting/estimating.</td>
+</tr>
+<tr class="odd">
+<td><code>COVID_OUTCOMES</code>, <code>FUTURE_OUTCOMES</code>,
+<code>HISTORY_FUTURE_OUTCOMES</code>, <code>MAIN_OUTCOMES</code></td>
+<td><code>02d</code>, <code>03a</code>, <code>02e</code></td>
+<td>—</td>
+<td>The outcome lists actually plotted/estimated in each script — the
+most common thing you’ll want to extend when adding a new outcome to the
+descriptives or event studies.</td>
+</tr>
+<tr class="even">
+<td><code>AXIS_TEXT_SIZE</code>, <code>AXIS_TITLE_SIZE</code>,
+<code>STRIP_TEXT_SIZE</code>, <code>LEGEND_TEXT_SIZE</code>,
+<code>LEGEND_TITLE_SIZE</code>, <code>TITLE_SIZE</code></td>
+<td><code>02d</code>, <code>02e</code></td>
+<td>13–16</td>
+<td>Plot text sizing, tuned for slide legibility.</td>
+</tr>
+<tr class="odd">
+<td><code>min_n</code>, <code>tol</code></td>
+<td><code>04_lasso_workoutside.R</code></td>
+<td><code>20</code>, <code>0.02</code></td>
+<td>Factor-lumping threshold for rare industry/occupation categories,
+and the lambda tolerance rule (how far above the CV-optimal deviance to
+relax the lasso penalty).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</div>
+</div>
+<div id="ukhls-variables-we-use-and-how-we-process-them" class="section level2">
+<h2>6. UKHLS variables we use and how we process them</h2>
+<p>This section is the variable-level companion to §2: not what the data
+collections are, but exactly which UKHLS variables this repo pulls, how
+baseline is actually selected at the code level, and how raw survey
+codes turn into the harmonized/derived variables the rest of the
+pipeline uses. Everything below is grounded directly in
+<code>code/lib/family_baseline.R</code>,
+<code>code/lib/future_outcomes.R</code>,
+<code>code/lib/history.R</code>, <code>code/lib/covid_loader.R</code>,
+<code>code/lib/covid_panel.R</code>,
+<code>code/lib/harmonize_outcomes.R</code>,
+<code>code/lib/husits_harmonization.R</code>,
+<code>code/lib/work_groups.R</code>,
+<code>code/lib/policies_keyworkers.R</code>, and
+<code>code/lib/real_pay.R</code>.</p>
+<div id="useful-ukhlsukds-documentation-links" class="section level3">
+<h3>6.1 Useful UKHLS/UKDS documentation links</h3>
+<ul>
+<li><strong>Survey timeline</strong> — <a href="https://www.understandingsociety.ac.uk/documentation/mainstage/survey-timeline/" class="uri">https://www.understandingsociety.ac.uk/documentation/mainstage/survey-timeline/</a>
+— calendar of main-study wave fieldwork periods; useful alongside §2.1’s
+wave↔︎year mapping.</li>
+<li><strong>Main survey variable search</strong> — <a href="https://www.understandingsociety.ac.uk/documentation/mainstage/variables/" class="uri">https://www.understandingsociety.ac.uk/documentation/mainstage/variables/</a>
+— look up any main-study variable (e.g. <code>jbstat</code>,
+<code>husits</code>) by name across waves.</li>
+<li><strong>COVID variable search</strong> — <a href="https://www.understandingsociety.ac.uk/documentation/covid-19/variables/" class="uri">https://www.understandingsociety.ac.uk/documentation/covid-19/variables/</a>
+— the same, for the COVID-19 Study variables in §6.6.</li>
+<li><strong>Main survey (EUL) documentation,
+incl. questionnaires</strong> — <a href="https://datacatalogue.ukdataservice.ac.uk/studies/study/6614#details" class="uri">https://datacatalogue.ukdataservice.ac.uk/studies/study/6614#details</a></li>
+<li><strong>LAD data (SL) documentation</strong> — <a href="https://datacatalogue.ukdataservice.ac.uk/studies/study/6666#details" class="uri">https://datacatalogue.ukdataservice.ac.uk/studies/study/6666#details</a></li>
+<li><strong>Main survey (SL) documentation</strong> — <a href="https://datacatalogue.ukdataservice.ac.uk/studies/study/6931#documentation" class="uri">https://datacatalogue.ukdataservice.ac.uk/studies/study/6931#documentation</a></li>
+<li><strong>Geography data user guide</strong> — <a href="https://doc.ukdataservice.ac.uk/doc/6931/mrdoc/pdf/main_survey_user_guide_geography.pdf" class="uri">https://doc.ukdataservice.ac.uk/doc/6931/mrdoc/pdf/main_survey_user_guide_geography.pdf</a></li>
+<li><strong>COVID survey documentation, incl. questionnaires</strong> —
+<a href="https://datacatalogue.ukdataservice.ac.uk/studies/study/8644#details" class="uri">https://datacatalogue.ukdataservice.ac.uk/studies/study/8644#details</a></li>
+</ul>
+</div>
+<div id="variable-naming-prefixes-and-suffixes-in-one-place" class="section level3">
+<h3>6.2 Variable naming: prefixes and suffixes, in one place</h3>
+<p>The pieces above each introduce one of these as they come up; this is
+the full list together, so you don’t have to hunt back through §6.3–§6.9
+to remember what a name means.</p>
+<p><strong>Prefixes</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Prefix</th>
+<th>Meaning</th>
+<th>Added by</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>base_</code></td>
+<td>A <strong>baseline</strong> value — this person’s I/J/K 2019 row
+(§6.3). Applied to every column except <code>pidp</code></td>
+<td><code>build_baseline()</code>, <code>family_baseline.R</code></td>
+</tr>
+<tr class="even">
+<td><code>hist_</code> (person) / <code>hist_couple_</code>
+(couple)</td>
+<td>A <strong>pre-baseline history</strong> summary statistic
+(e.g. <code>hist_mean_jbhrs</code>, <code>hist_n_obs</code>) — one row
+per person/couple, summarizing all their pre-baseline waves</td>
+<td><code>summarise_prebaseline_history()</code> /
+<code>summarise_prebaseline_couple_history()</code>,
+<code>history.R</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Suffixes added by this pipeline</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Suffix</th>
+<th>Meaning</th>
+<th>Added by</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>_h</code> / <code>_w</code></td>
+<td><strong>Husband</strong> / <strong>wife</strong> — every
+couple-level file has both spouses’ variables side by side with these
+suffixes (e.g. <code>jbhrs_h</code>, <code>husits_w</code>)</td>
+<td>The various <code>build_*_couple_*()</code> functions in
+<code>samples.R</code>/<code>history.R</code> (§2.4)</td>
+</tr>
+<tr class="even">
+<td><code>_real</code></td>
+<td>Inflation-adjusted to constant <strong>December 2019 pounds</strong>
+(§6.9)</td>
+<td><code>add_real_pay_vars()</code>, <code>real_pay.R</code></td>
+</tr>
+<tr class="odd">
+<td><code>_code</code></td>
+<td>A numeric 1–4 harmonized code (e.g. <code>wfh_code</code>)</td>
+<td><code>combine_wfh()</code>, <code>harmonize_outcomes.R</code></td>
+</tr>
+<tr class="even">
+<td><code>_cat</code></td>
+<td>The <strong>labelled factor</strong> version of a
+<code>_code</code>-style variable (e.g. <code>wfh_cat</code>,
+<code>husits_cat</code>)</td>
+<td><code>combine_wfh()</code> (<code>harmonize_outcomes.R</code>);
+<code>label_husits()</code> (<code>husits_harmonization.R</code>)</td>
+</tr>
+<tr class="odd">
+<td><code>_raw</code></td>
+<td>The value <strong>before</strong> harmonization/recoding
+(e.g. <code>husits_raw</code>) — kept alongside the cleaned version
+rather than discarded</td>
+<td><code>add_husits_main_vars()</code> /
+<code>add_husits_covid_vars()</code>,
+<code>husits_harmonization.R</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Suffixes that come from UKHLS itself</strong> (not created by
+this pipeline, but worth knowing since they’re everywhere in the raw
+variable names):</p>
+<table>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Suffix</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>_dv</code></td>
+<td>UKHLS “derived variable” — pre-computed by UKHLS itself from raw
+questionnaire items (e.g. <code>age_dv</code>, <code>isced11_dv</code>,
+<code>jbft_dv</code>)</td>
+</tr>
+<tr class="even">
+<td><code>_cc</code></td>
+<td>UKHLS “condensed code” — the coarser EUL-edition industry/occupation
+codes (<code>jbsic07_cc</code>, <code>jbsoc10_cc</code>), as opposed to
+the detailed SL-only <code>jbsic07</code>/<code>jbsoc10</code> (§6.4,
+§7.3)</td>
+</tr>
+<tr class="odd">
+<td><code>_cv</code></td>
+<td>The COVID-study’s own name for a main-survey concept
+(e.g. <code>howlng_cv</code>, <code>husits_cv</code>) — this pipeline
+renames these away immediately on load (§6.5), so you’ll only see
+<code>_cv</code> in the raw <code>.dta</code> files, never in derived
+data</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</div>
+<div id="how-the-pre-pandemic-baseline-is-actually-selected" class="section level3">
+<h3>6.3 How the pre-pandemic baseline is actually selected</h3>
+<p><code>build_baseline()</code> — defined in
+<code>code/lib/family_baseline.R</code>, called from
+<code>code/run/01_build_data.R</code> (Step 1) — builds the composite
+baseline from waves I, J, K.</p>
+<p><strong>The rule is simple: take each person’s latest available wave
+(K, then J, then I) that falls in 2019.</strong> Concretely:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Wave K</strong> rows in 2019 are used first.</li>
+<li><strong>Wave J</strong> rows in 2019 fill in anyone not already
+covered by wave K.</li>
+<li><strong>Wave I</strong> rows in 2019 fill in anyone still
+missing.</li>
+</ol>
+<p>(In code, K and J are filtered with <code>intdaty_dv &lt; 2020</code>
+and I with <code>intdaty_dv == 2019</code> — equivalent in practice,
+since neither K nor J fields any interviews before 2019.)</p>
+<p>Other things <code>build_baseline()</code> does while assembling the
+composite:</p>
+<ul>
+<li>Renames every column with a <code>base_</code> prefix (§6.2).</li>
+<li><strong>Recodes education.</strong> UKHLS’s derived education
+variable is <code>isced11_dv</code>, coded on the international ISCED
+2011 scale (roughly: no qualification → school-leaving → vocational →
+degree → higher degree). Code 8 on that scale is a doctorate/PhD;
+<code>build_baseline()</code> merges it into code 7 (Master’s degree) so
+there’s one combined “higher degree” category instead of splitting off a
+small PhD group, and UKHLS’s negative missing-data codes become
+<code>NA</code>.</li>
+<li><strong>Computes <code>base_health_sf</code>.</strong> UKHLS asks
+general self-rated health via two <em>mutually-exclusive routed</em>
+questions — <code>sf1</code> and <code>scsf1</code> — where only one is
+ever put to a given respondent (which one depends on survey routing, not
+choice). <code>build_baseline()</code> applies
+<code>combine_health()</code> (§6.6): take <code>scsf1</code> if
+present, else <code>sf1</code>, so every baseline row ends up with one
+health variable regardless of which question that person happened to
+get.</li>
+<li><strong>Deflates the baseline’s monetary variables to real terms
+immediately</strong> — <code>basrate</code> (hourly pay),
+<code>paygu_dv</code> (usual gross pay), <code>fimnlabgrs_dv</code>
+(gross labour income), <code>fimngrs_dv</code> (gross personal income),
+and <code>fihhmngrs_dv</code> (gross household income) — rather than
+waiting for a later stage (the same CPIH deflation described in
+§6.9).</li>
+<li><strong>Baseline industry/occupation treatment grouping</strong> —
+<code>group_industry_based</code> /
+<code>group_industry_based_detailed</code>, the
+key-worker/shutdown-sector classification described in §6.8 — is added
+right after <code>build_baseline()</code> returns, as a separate step in
+<code>01_build_data.R</code>, not inside <code>build_baseline()</code>
+itself.</li>
+</ul>
+<p><strong>Family/partner/children construction</strong> —
+<code>build_family_data()</code>, also in
+<code>family_baseline.R</code>, called internally by
+<code>clean_baseline_wave()</code> (baseline) and by
+<code>load_main_wave_with_family()</code> in
+<code>future_outcomes.R</code> (history and future waves) — comes from
+two other main-survey files per wave, not <code>indresp</code>:</p>
+<ul>
+<li><code>{wave}_egoalt.dta</code> — the relationship-grid file.
+<code>relationship_dv %in% c(1,2,3)</code> (husband/wife,
+partner/cohabitee, civil partner) identifies a person’s
+<strong>partner</strong> (<code>partner_pidp</code>,
+<code>partner_rel</code>); <code>relationship_dv %in% 9:12</code>
+identifies <strong>children</strong> in the household.</li>
+<li><code>{wave}_indall.dta</code> — used only to look up each
+identified child’s <code>age_dv</code>, since egoalt itself doesn’t
+carry age.</li>
+</ul>
+<p>From these, <code>build_family_data()</code> derives
+<code>n_children</code>, <code>n_children_18_under</code>,
+<code>n_children_16_under</code>, <code>n_children_10_under</code>,
+<code>age_youngest_child</code>, and a <code>family_id</code> built from
+the sorted pair of partner <code>pidp</code>s (so both partners resolve
+to the same id).</p>
+</div>
+<div id="variables-pulled-from-every-main-survey-wave-baseline-history-and-future-alike" class="section level3">
+<h3>6.4 Variables pulled from every main-survey wave (baseline, history,
+and future alike)</h3>
+<p>Baseline, pre-baseline history, and future follow-up waves all funnel
+through the <strong>same underlying variable list</strong>, via three
+loader functions that all pull nearly identical columns from
+<code>{wave}_indresp.dta</code>:</p>
+<ul>
+<li><code>clean_baseline_wave()</code> — defined
+<code>family_baseline.R</code>, called internally by
+<code>build_baseline()</code> — for baseline (I/J/K).</li>
+<li><code>load_history_wave()</code> (<code>history.R</code>) →
+<code>load_main_wave_with_family()</code>
+(<code>future_outcomes.R</code>) — <code>load_history_wave()</code> is
+called by <code>build_prebaseline_history_long()</code>, itself called
+from <code>code/run/01_build_data.R</code> (Step 1b) — for pre-baseline
+history.</li>
+<li><code>load_main_wave_with_family()</code> directly, called by
+<code>build_future_outcomes_long()</code>
+(<code>future_outcomes.R</code>), itself called from
+<code>code/run/01_build_data.R</code> (Step 5) — for future follow-up
+waves.</li>
+</ul>
+<p>This is why the same outcome (e.g. <code>jbhrs</code>) means the same
+thing whether you’re looking at history, baseline, or future rows.</p>
+<table>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>pidp</code>, <code>hidp</code></td>
+<td>Person id (stable across waves/studies); household id
+(wave-specific)</td>
+</tr>
+<tr class="even">
+<td><code>sex</code>, <code>age_dv</code>, <code>gor_dv</code>,
+<code>isced11_dv</code></td>
+<td>Sex; derived age; region; derived education</td>
+</tr>
+<tr class="odd">
+<td><code>jbstat</code></td>
+<td>Labour-market status (1 employed, 2 self-employed, …)</td>
+</tr>
+<tr class="even">
+<td><code>jbhas</code></td>
+<td>Did paid work last week (1 yes, 2 no)</td>
+</tr>
+<tr class="odd">
+<td><code>jboff</code></td>
+<td>Away from a job last week without working (1 yes, 2 no) —
+distinguishes “has a job but didn’t work” from “no job”</td>
+</tr>
+<tr class="even">
+<td><code>jbsic07_cc</code>, <code>jbsoc10_cc</code></td>
+<td>Condensed industry (SIC 2007) / occupation (SOC 2010) — always
+present</td>
+</tr>
+<tr class="odd">
+<td><code>jbsic07</code>, <code>jbsoc10</code></td>
+<td>Detailed 4-digit SIC/SOC — <strong>baseline only</strong>, and only
+under the SL edition (silently absent under EUL via
+<code>any_of()</code>); history/future loads never request these at
+all</td>
+</tr>
+<tr class="even">
+<td><code>jbft_dv</code>, <code>jbhrs</code>, <code>jbot</code>,
+<code>jbsect</code>, <code>jbterm1</code>, <code>basrate</code></td>
+<td>Full/part-time; usual weekly hours; overtime hours; public/private
+sector; permanent/temporary; basic hourly pay rate</td>
+</tr>
+<tr class="odd">
+<td><code>fimngrs_dv</code>, <code>fihhmngrs_dv</code></td>
+<td>Gross personal income/month; gross household income (month before
+interview)</td>
+</tr>
+<tr class="even">
+<td><code>paygu_dv</code></td>
+<td>Usual gross pay per month from the <strong>main job
+only</strong></td>
+</tr>
+<tr class="odd">
+<td><code>fimnlabgrs_dv</code></td>
+<td>Total gross monthly labour income — <code>paygu_dv</code> (main job)
++ <code>seearngrs_dv</code> (self-employment) + <code>j2pay_dv</code>
+(second job). Broader than <code>paygu_dv</code>, not a renamed copy of
+it</td>
+</tr>
+<tr class="even">
+<td><code>jbpl</code>, <code>jbwah</code></td>
+<td>Work location (1 home/2 employer/3 travelling/4 other); WFH
+frequency (only asked if <code>jbpl != 1</code>) — harmonized together
+in §6.7</td>
+</tr>
+<tr class="odd">
+<td><code>mastat_dv</code>, <code>sppid</code>, <code>nchild_dv</code>,
+<code>ndepchl_dv</code></td>
+<td>Marital status; spouse’s pidp; number of children; number of
+dependent children</td>
+</tr>
+<tr class="even">
+<td><code>howlng</code>, <code>husits</code>, <code>chcare</code>,
+<code>aidadhrs</code></td>
+<td>Housework hours; childcare-responsibility (§6.7); childcare (often
+binary); caring hours/week</td>
+</tr>
+<tr class="odd">
+<td><code>scghq2_dv</code>, <code>scghq1_dv</code>,
+<code>sclfsato</code></td>
+<td>Two scorings of the <strong>GHQ-12</strong> (General Health
+Questionnaire, a standard 12-item psychological-distress/wellbeing
+screen): <code>scghq2_dv</code> is <strong>caseness</strong> — each item
+scored 0/0/1/1, summed 0–12, a simple count of symptoms above threshold,
+commonly used to flag likely distress; <code>scghq1_dv</code> is the
+<strong>Likert score</strong> — each item scored 0/1/2/3, summed 0–36, a
+finer-grained severity measure. <code>sclfsato</code> is overall life
+satisfaction (1–7)</td>
+</tr>
+<tr class="even">
+<td><code>sf1</code>, <code>scsf1</code></td>
+<td>Self-reported general health — routed, only one exists per
+respondent (§6.7)</td>
+</tr>
+<tr class="odd">
+<td><code>intdatm_dv</code>, <code>intdaty_dv</code></td>
+<td>Interview month/year (negative = missing; imputed as the median
+month within the same interview-year when only the month is
+missing)</td>
+</tr>
+</tbody>
+</table>
+<p>Baseline additionally carries
+<code>jbsic07</code>/<code>jbsoc10</code> (SL only, see above) since
+those are what the treatment classification in §6.9 needs.</p>
+</div>
+<div id="variables-pulled-from-the-covid-study" class="section level3">
+<h3>6.5 Variables pulled from the COVID study</h3>
+<p><code>code/lib/covid_loader.R</code>’s <code>load_covid_wave()</code>
+reads <code>{wave}_indresp_w.dta</code> (web-mode only — §2.3) and keeps
+the columns below; <code>merge_covid_waves_wide()</code> (same file)
+merges all waves side by side. Both are called from
+<code>code/run/01_build_data.R</code> (Step 2).</p>
+<table>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>furlough</code>, <code>ff_furlough</code> → renamed
+<code>fffurlough</code></td>
+<td>Furlough status; an alternate furlough measure</td>
+</tr>
+<tr class="even">
+<td><code>hours</code></td>
+<td>Hours worked last week</td>
+</tr>
+<tr class="odd">
+<td><code>blwork</code>, <code>blhours</code>, <code>blwah</code></td>
+<td>Baseline (Jan–Feb 2020) work status / weekly hours / WFH frequency,
+asked retrospectively</td>
+</tr>
+<tr class="even">
+<td><code>sempderived</code></td>
+<td>1 employed, 2 self-employed, 3 both, 4 not employed</td>
+</tr>
+<tr class="odd">
+<td><code>wah</code></td>
+<td>WFH frequency: 1 always, 2 often, 3 sometimes, 4 never</td>
+</tr>
+<tr class="even">
+<td><code>howlng_cv</code> → renamed <code>howlng</code></td>
+<td>Housework hours (COVID-study name for the main-survey
+<code>howlng</code> concept)</td>
+</tr>
+<tr class="odd">
+<td><code>keyworker</code>, <code>keyworksector</code></td>
+<td>Self-reported key-worker status; self-reported key-worker sector
+(1–8 key, 9 not)</td>
+</tr>
+<tr class="even">
+<td><code>timechcare</code></td>
+<td>Childcare/home-schooling hours (continuous) — <strong>COVID-only, no
+main-survey equivalent</strong></td>
+</tr>
+<tr class="odd">
+<td><code>husits_cv</code> → renamed <code>husits</code></td>
+<td>Childcare-responsibility report, COVID coding (§6.7)</td>
+</tr>
+<tr class="even">
+<td><code>workchsch</code>, <code>workchsch2</code></td>
+<td>Whether work schedule changed because of
+home-schooling/childcare</td>
+</tr>
+</tbody>
+</table>
+<p>The loader renames <code>howlng_cv</code>→<code>howlng</code> and
+<code>husits_cv</code>→<code>husits</code> immediately on load so every
+downstream script can refer to one name regardless of which study a row
+came from — but the <em>coding scheme</em> underneath
+<code>husits</code> still differs by study until
+<code>husits_harmonization.R</code> runs (§6.7).</p>
+</div>
+<div id="harmonizing-variables-that-differ-between-main-and-covid" class="section level3">
+<h3>6.6 Harmonizing variables that differ between main and COVID</h3>
+<ul>
+<li><strong>Work location / WFH</strong> — <code>combine_wfh()</code>,
+defined <code>code/lib/harmonize_outcomes.R</code>, called from
+<code>code/run/01_build_data.R</code> (Step 5, future) and
+<code>history.R</code>’s <code>add_history_derived_variables()</code>
+(COVID rows don’t need it — see below): the main survey splits this
+across two branching variables, <code>jbpl</code> (work location) and
+<code>jbwah</code> (WFH frequency, only asked if
+<code>jbpl != 1</code>). <code>combine_wfh()</code> merges them into one
+<code>wfh_code</code> (1 Always…4 Never) / <code>wfh_cat</code> pair: if
+<code>jbpl == 1</code> (at home), <code>wfh_code</code> is forced to 1
+(Always); otherwise it’s just <code>jbwah</code>. The COVID study’s
+<code>wah</code> is already on this same 1–4 scale, so it needs no
+branching logic, just the rename above.</li>
+<li><strong>Housework hours</strong>: COVID’s <code>howlng_cv</code> is
+renamed to <code>howlng</code> at load time — same concept, slightly
+different recall window (COVID asks about last week; main asks about a
+usual week).</li>
+<li><strong>General health</strong> — <code>combine_health()</code>,
+defined <code>harmonize_outcomes.R</code>, called from
+<code>family_baseline.R</code>’s <code>build_baseline()</code> (as
+<code>base_health_sf</code>), <code>history.R</code>’s
+<code>add_history_derived_variables()</code>, and
+<code>code/run/01_build_data.R</code> (Step 5, future):
+<code>sf1</code>/<code>scsf1</code> are mutually exclusive due to UKHLS
+routing (only one is ever asked per respondent) —
+<code>health_sf &lt;- scsf1</code>, falling back to <code>sf1</code>
+where <code>scsf1</code> is missing. Recoded to an ordered factor
+(Excellent…Poor) — one function, applied identically everywhere.</li>
+<li><strong>Childcare responsibility (<code>husits</code>)</strong>
+(<code>code/lib/husits_harmonization.R</code>) — asked of <strong>each
+spouse separately</strong>: “who is mainly responsible for looking after
+the children?” Answers are <strong>ego-centric</strong> — “self” means
+whoever is answering, not a fixed person — so the same underlying
+reality (say, the wife does most of the childcare) shows up as “mainly
+self” in the wife’s answer and “mainly partner” in the husband’s. The
+<strong>final harmonized variable</strong> (what <code>husits</code>
+means after processing, regardless of which study or spouse it came
+from) is a 4-category factor: <strong>1 Mainly self, 2 Mainly partner, 3
+Shared, 4 Someone else/other</strong> — produced by
+<code>label_husits()</code>. Getting there requires reconciling two very
+different raw response scales:
+<ul>
+<li>Main-stage raw coding is already 1–4 with exactly those meanings, so
+no remapping is needed beyond cleaning negative/missing codes
+(<code>clean_husits_main()</code>).</li>
+<li>COVID raw coding uses a finer 1–9 scale that must be collapsed onto
+the same 1–4 meaning (<code>clean_husits_covid()</code>): 1/2 → “mainly
+me” (always/usually) → <strong>1</strong>; 4/5 → “mainly partner”
+(usually/always) → <strong>2</strong>; 3 → shared → <strong>3</strong>;
+6/7/9 → other/someone else → <strong>4</strong>; 8 (not applicable) →
+treated as <strong>missing</strong>, not folded into “other.”</li>
+<li><code>clean_husits_main()</code> / <code>clean_husits_covid()</code>
+produce the harmonized 1–4 code; <code>label_husits()</code> (same file)
+attaches the four labels above — all three defined in
+<code>husits_harmonization.R</code>, called from
+<code>code/lib/covid_panel.R</code>’s
+<code>build_covid_long_panel()</code> and from the
+<code>add_husits_main_vars()</code>/<code>add_husits_covid_vars()</code>
+wrappers (same file), which are in turn called from
+<code>family_baseline.R</code>’s <code>clean_baseline_wave()</code> and
+<code>future_outcomes.R</code>’s
+<code>load_main_wave_indresp()</code>.</li>
+<li>Couple-level directional variables are then built from <strong>both
+spouses’ reports</strong> by
+<code>add_couple_husits_direction_vars()</code> (also
+<code>husits_harmonization.R</code>, called from
+<code>code/run/01_build_data.R</code> via the local
+<code>add_baseline_couple_husits_direction()</code> wrapper, and from
+<code>history.R</code>’s
+<code>build_prebaseline_couple_history_long()</code>): e.g.
+<code>husits_wife_main_wreport</code> (wife says she’s mainly
+responsible) vs. <code>husits_wife_main_hreport</code> (husband says the
+wife is mainly responsible) — plus averages across whichever report(s)
+are available. The <code>husits_wife_main_both</code> outcome used in
+the slide decks (§1.4’s design, §11’s TeX table) requires
+<strong>both</strong> spouses to agree the wife is mainly responsible
+before it equals 1.</li>
+</ul></li>
+</ul>
+</div>
+<div id="derived-outcome-indicators-how-did-they-work-is-actually-built" class="section level3">
+<h3>6.7 Derived outcome indicators — how “did they work” is actually
+built</h3>
+<p>These are the workhorse binary/categorical outcomes behind most
+figures and event studies —
+<code>make_any_work_covid()</code>/<code>make_any_work_future()</code>,
+<code>make_work_last_week_status_main()</code>/ <code>_covid()</code>,
+<code>make_workoutside_covid()</code>/<code>_future()</code>, and
+<code>make_wfh_some_covid()</code>/<code>_future()</code>, all defined
+in <code>code/lib/work_groups.R</code>. The COVID versions are called
+from <code>code/lib/covid_panel.R</code>’s
+<code>build_covid_long_panel()</code> (itself called from
+<code>code/run/01_build_data.R</code>, Step 3); the main/future versions
+are called from <code>history.R</code>’s
+<code>add_history_derived_variables()</code> and from
+<code>code/run/01_build_data.R</code> (Step 5, future). Each has a COVID
+version and a main-survey/“future” version, built from different raw
+variables but designed to mean the same thing:</p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Outcome</th>
+<th>COVID logic (<code>sempderived</code>, <code>hours</code>,
+<code>wah</code>)</th>
+<th>Main/future logic (<code>jbstat</code>/<code>jbhas</code>,
+<code>jbhrs</code>, <code>wfh_code</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>any_work</code></td>
+<td><code>sempderived==4</code> → 0; else 1 if <code>hours&gt;0</code>,
+0 if <code>hours==0</code></td>
+<td><code>jbhas==1</code> → 1, <code>jbhas==2</code> → 0 (direct “did
+you work last week” question — future/history rows do
+<strong>not</strong> use <code>jbhrs</code> for this)</td>
+</tr>
+<tr class="even">
+<td><code>work_last_week_status</code> (1 worked / 2 has job didn’t work
+/ 3 no job)</td>
+<td>1 if <code>hours&gt;0</code>; 2 if employed with
+<code>hours==0</code>; 3 if <code>sempderived==4</code></td>
+<td>1 if <code>jbhas==1</code>; 2 if
+<code>jbhas==2 &amp; jboff==1</code>; 3 if
+<code>jbhas==2 &amp; jboff==2</code></td>
+</tr>
+<tr class="odd">
+<td><code>workoutside</code></td>
+<td>0 if <code>hours&lt;=0</code>; else 0 if <code>wah==1</code> (always
+WFH), 1 if <code>wah</code> 2–4</td>
+<td>0 if not employed/self-employed or <code>jbhrs&lt;=0</code>; 0 if
+<code>wfh_code==1</code> (always WFH); 1 if <code>wfh_code</code>
+2–4</td>
+</tr>
+<tr class="even">
+<td><code>wfh_some</code></td>
+<td>0 if <code>hours&lt;=0</code>; 1 if <code>wah</code> 1–3 (any WFH);
+0 if <code>wah==4</code> (never)</td>
+<td>0 if not employed or <code>jbhrs&lt;=0</code>; 1 if
+<code>wfh_code</code> 1–3; 0 if <code>wfh_code==4</code></td>
+</tr>
+</tbody>
+</table>
+<p>Two subtleties worth knowing:</p>
+<ul>
+<li><strong>The COVID long panel (<code>df_sample_long_covid.rds</code>,
+§2.4) isn’t just the nine real COVID waves
+<code>ca</code>–<code>ci</code>.</strong> It also contains two extra,
+<strong>synthetic</strong> rows per person — “synthetic” meaning they’re
+not an actual COVID-study interview, just pre-pandemic information
+re-packaged to look like one more row in the same <code>wave</code>
+column, so the COVID event studies in §1.4 have a usable pre-period to
+compare against without waiting on a real main-survey follow-up. Both
+are added inside <code>build_covid_long_panel()</code>
+(<code>code/lib/covid_panel.R</code>, called from
+<code>code/run/01_build_data.R</code>’s Step 3), and both take literal
+values in the <code>wave</code> column alongside
+<code>&quot;ca&quot;</code>…<code>&quot;ci&quot;</code>:
+<ul>
+<li><strong><code>wave == &quot;2019&quot;</code></strong> — built from the
+person’s <strong>main-survey baseline</strong> (§6.3):
+<code>base_jbstat</code> → <code>sempderived</code>,
+<code>base_jbhrs</code> → <code>hours</code>, <code>base_howlng</code> →
+<code>howlng</code>, with <code>wah</code> forced to missing since
+pre-2020 main-survey waves never asked the COVID-style WFH question.
+This is the same 2019 baseline used everywhere else in the pipeline,
+just relabelled to sit in the COVID panel’s time axis.</li>
+<li><strong><code>wave == &quot;baseline&quot;</code></strong> — a <em>second,
+independent</em> pre-period row, built instead from the COVID study’s
+<strong>own</strong> retrospective questions about <strong>Jan–Feb
+2020</strong> specifically
+(<code>blwork</code>/<code>blhours</code>/<code>blwah</code> — “before
+lockdown work/hours/WFH”). Unlike the <code>&quot;2019&quot;</code> row, these
+questions were <strong>not asked just once</strong> — UKHLS repeated
+this Jan–Feb-2020 recall question in several early COVID waves (not
+every wave, and not everyone answers every wave they’re asked). So for
+each person, <code>build_covid_long_panel()</code> has to pick
+<strong>one</strong> answer out of potentially several: it takes each
+person’s <strong>earliest valid answer in wave order</strong>
+(<code>ca</code> first, then <code>cb</code>, <code>cc</code>, … — via
+<code>first_valid()</code> in <code>utils.R</code>, which also treats
+UKHLS’s <code>-8</code> “not applicable” code as invalid, same as a
+genuine missing value), and uses that single value for the
+<code>&quot;baseline&quot;</code> row regardless of which wave it came from.
+Earliest-valid is used on the assumption that a recollection given
+closer to the actual Jan–Feb 2020 period (i.e. in the <code>ca</code>
+wave, fielded in April 2020) is less subject to recall drift than the
+same question answered again a wave or two later. This row has no
+housework/childcare measure and leaves those missing.</li>
+<li>Two rows exist, not one, for two reasons. First, they answer
+slightly different questions: <code>&quot;2019&quot;</code> gives the standard
+annual baseline (same source/timing as every other baseline variable in
+this repo); <code>&quot;baseline&quot;</code> gives a second data point measured
+closer to the actual onset of restrictions, from a question asked as
+part of the COVID survey rather than recalled a year-plus later. Second,
+and just as important, <strong>they cover different outcomes</strong>:
+some concepts — most notably <strong>working from home</strong> — simply
+weren’t asked about at all in the pre-2020 main survey, so the
+<code>&quot;2019&quot;</code> row has no way to give a WFH baseline
+(<code>wah</code> is forced to missing there, as noted above). The COVID
+study’s Jan–Feb-2020 retrospective questions (<code>blwah</code>, in
+this case) exist <em>precisely because</em> UKHLS added them to let
+researchers construct a pre-pandemic baseline for outcomes the regular
+survey never measured — so the <code>&quot;baseline&quot;</code> row is the
+<em>only</em> one of the two that can supply a baseline
+<code>workoutside</code>/<code>wfh_some</code> value at all. Event
+studies and descriptive figures pick whichever row fits the outcome and
+comparison being made (§6’s event-study reference-period notes,
+§1.4).</li>
+</ul></li>
+<li><strong><code>workoutside</code>/<code>wfh_some</code> are
+wave-gated, not just row-gated.</strong> If the WFH question wasn’t
+asked at all in a given wave (<code>wfh_question_available</code>),
+<em>every</em> row in that wave — including non-workers — gets
+<code>NA</code>, rather than a potentially-misleading 0. This is exactly
+why the two synthetic rows above have these set to missing rather than
+0: neither pre-pandemic data source asked the COVID-style WFH
+question.</li>
+</ul>
+</div>
+<div id="pre-pandemic-treatmentexposure-classification-sicsoc-key-worker-shutdown-sector" class="section level3">
+<h3>6.8 Pre-pandemic treatment/exposure classification (SIC/SOC → key
+worker / shutdown sector)</h3>
+<p>This is the mechanics behind <code>group_industry_based</code> /
+<code>group_industry_based_detailed</code>, computed by
+<code>add_baseline_work_groups()</code> /
+<code>add_baseline_work_groups_sl()</code> (both defined
+<code>code/lib/work_groups.R</code>, called from
+<code>code/run/01_build_data.R</code> for the baseline itself (Step 1)
+and again for the future panel (Step 5), and from
+<code>code/lib/covid_panel.R</code>’s
+<code>build_covid_long_panel()</code> for the COVID panel) — the
+exposure classification introduced in §1.4, computed once from
+<strong>baseline</strong> SIC/SOC and carried through to every
+downstream file by joining on <code>pidp</code>/<code>couple_id</code>,
+never recomputed from a person’s current job.</p>
+<ul>
+<li><strong>Shutdown sector</strong>: from the IFS BN278 endnote (Joyce
+&amp; Xu 2020).
+<ul>
+<li><strong>EUL</strong>: condensed 2-digit SIC codes
+<code>{55, 56, 79, 90, 91, 92, 93, 96}</code>.</li>
+<li><strong>SL</strong>: the exact 4-digit SIC “CLASS” list, tested by
+<code>is_ifs_shutdown_sic()</code> (defined <code>work_groups.R</code>,
+called internally by <code>add_baseline_work_groups_sl()</code>) — e.g.
+accommodation/food service (4-digit range 5510–5630), travel agencies
+(7911–7990), childcare (8510, 8891), arts/leisure except artistic
+creation (9001–9329 excl. 9003), personal care except funerals
+(9601–9609 excl. 9603), domestic services (9700). This is finer than the
+EUL 2-digit list — exactly the resolution gain the Special Licence
+application (§1’s design section) argues for.</li>
+</ul></li>
+<li><strong>Key worker</strong>: from the ONS SOC×SIC key-worker
+reference table
+(<code>policies/keyworkersreferencetableupdated2.xlsx</code>, sheet 4),
+read and crosswalked by <code>code/lib/policies_keyworkers.R</code>.
+<ul>
+<li><strong>EUL</strong>: <code>build_keyworker_crosswalk()</code>
+(defined <code>policies_keyworkers.R</code>, called from
+<code>code/run/01_build_data.R</code>’s Step 0) collapses the detailed
+sheet to condensed (SOC÷10, SIC÷100) cells, each flagged key if
+<em>any</em> underlying detailed cell in it is key. Sub-typed by
+hand-coded SIC/SOC rules in <code>add_baseline_work_groups()</code>
+(<code>work_groups.R</code>) into three EUL categories: health &amp;
+social services, education, and public safety &amp; essential government
+— each mutually exclusive, using cross-checks between SIC and SOC to
+resolve ambiguous cases (e.g. SOC 118 is only “health &amp; social” if
+paired with SIC 86–88).</li>
+<li><strong>SL</strong>:
+<code>build_keyworker_crosswalk_detailed()</code> (defined
+<code>policies_keyworkers.R</code>, called from
+<code>code/run/01_build_data.R</code>’s Step 0, SL only) keeps the full
+(SOC 4-digit × SIC 4-digit) resolution — a job is key only if that
+<em>exact</em> combination is flagged, collapsed to one of eight ONS
+groups (health &amp; social care, education &amp; childcare, food &amp;
+necessary goods, transport, utilities &amp; communication, and three
+government/public-safety groups merged into one “public services and
+government” label). Requires <strong>both</strong> detailed codes to be
+observed; ties across ONS groups are broken by a fixed priority order
+(<code>KEYWORKER_GROUP_PRIORITY</code>).</li>
+<li>Either way, <code>group_industry_based</code> is the collapsed
+key-worker/shutdown/other/missing factor used for headline treatment;
+<code>group_industry_based_detailed</code> keeps the key-worker sub-type
+(used for the detailed-groups figures and the education exclusion in the
+treatment definitions, §1.4).</li>
+</ul></li>
+</ul>
+</div>
+<div id="real-inflation-adjusted-pay" class="section level3">
+<h3>6.9 Real (inflation-adjusted) pay</h3>
+<p><code>add_real_pay_vars()</code> — defined
+<code>code/lib/real_pay.R</code>, called from
+<code>family_baseline.R</code>’s <code>build_baseline()</code>
+(baseline) and <code>future_outcomes.R</code>’s
+<code>load_main_wave_indresp()</code> (history/future) — converts
+nominal monetary variables to constant <strong>December 2019
+pounds</strong> using the ONS CPIH all-items monthly index
+(<code>policies/uk_price_index_monthly.csv</code>, series
+<code>L522</code>; base month set by <code>REAL_PAY_BASE_YM</code> in
+<code>config.R</code>, loaded internally via
+<code>load_real_pay_deflator()</code>, same file). Deflated variables:
+<code>basrate</code>, <code>paygu_dv</code>, <code>fimnlabgrs_dv</code>,
+<code>fimngrs_dv</code>, <code>fihhmngrs_dv</code> — each gets a
+<code>_real</code> counterpart (e.g. <code>paygu_dv_real</code>),
+computed as <code>nominal × (CPIH_{2019m12} / CPIH_t)</code> where
+<code>t</code> is the respondent’s interview month. Negative/invalid raw
+values are set to missing before deflating; a missing interview month
+means a missing <code>_real</code> value for that row (logged as a
+warning, not silently dropped).</p>
+</div>
+</div>
 <div id="data-licensing-full-walkthrough" class="section level2">
-<h2>5. Data &amp; licensing (full walkthrough)</h2>
+<h2>7. Data &amp; licensing (full walkthrough)</h2>
 <div id="the-datasets" class="section level3">
-<h3>5.1 The datasets</h3>
+<h3>7.1 The datasets</h3>
 <p>This project uses three UK Data Service (UKDS) study families. Only
 the <strong>EUL</strong> edition is currently in use; the pipeline
-already supports switching to <strong>SL</strong> via one flag (§5.3)
+already supports switching to <strong>SL</strong> via one flag (§7.3)
 once that access is granted.</p>
 <table>
 <colgroup>
@@ -1173,17 +2420,17 @@ config — adding it will be part of building the IV design.</p>
 </blockquote>
 </div>
 <div id="getting-the-data-ukds" class="section level3">
-<h3>5.2 Getting the data (UKDS)</h3>
+<h3>7.2 Getting the data (UKDS)</h3>
 <ol style="list-style-type: decimal">
 <li><p>Create your UKDS account and get invited/approved on the project
-— see §6 for the full account, invitation, and paperwork sequence.
+— see §8 for the full account, invitation, and paperwork sequence.
 <strong>Do this before touching any data at all</strong>, regardless of
 how the files themselves reach you. UKDS project approval is what makes
 you a licensed user of the data; that’s required whether you get a fresh
 download or a teammate’s already-synced Dropbox copy.</p></li>
 <li><p><strong>For EUL data, join the shared Dropbox folder — don’t
 download from UKDS.</strong> The EUL data currently in use (SN 6614 main
-study, SN 8644 COVID study — §5.1) already lives in the team’s shared
+study, SN 8644 COVID study — §7.1) already lives in the team’s shared
 Dropbox project folder, under
 <code>.../Dropbox/WFH_covid/UK project/understanding society uk all data/</code>.
 Once you’re an approved project member (step 1), ask the project lead to
@@ -1204,12 +2451,12 @@ Sync</strong> to bring down both the
 <code>division-of-labor</code> code folder — full sync of both is fine
 here, since no AI coding tool ever runs on this machine. Pick up the
 code with GitHub Desktop’s “Add local repository” rather than cloning
-(§10). Select only these project folders, not your whole Dropbox
+(§12). Select only these project folders, not your whole Dropbox
 account.</p>
 <p>On the <strong>coding machine</strong>, Selective-Sync the
 <code>division-of-labor</code> repo folder but exclude the data folder —
-see §12 for exactly how.</p>
-<p>Once the data is synced on your run machine, skip to §5.4 to point
+see §14 for exactly how.</p>
+<p>Once the data is synced on your run machine, skip to §7.4 to point
 <code>code/lib/config.R</code> at your local copy before running any
 code.</p></li>
 <li><p><strong>From scratch — only if you don’t have Dropbox access, or
@@ -1226,14 +2473,14 @@ and layout — SL just adds variables.</li>
 (e.g. <code>cd_indresp_w.dta</code>).</li>
 </ul></li>
 <li><p>Place the unpacked study folders <strong>outside the git
-repo</strong> (see §5.4) — the placement rules for EUL vs. SL data are
-in §5.5. There is no shared-Dropbox shortcut for SL data; it only ever
-reaches you through the secure-machine process in §7, once
+repo</strong> (see §7.4) — the placement rules for EUL vs. SL data are
+in §7.5. There is no shared-Dropbox shortcut for SL data; it only ever
+reaches you through the secure-machine process in §9, once
 approved.</p></li>
 </ol>
 </div>
 <div id="eul-vs-sl-the-data_license-switch" class="section level3">
-<h3>5.3 EUL vs SL — the <code>DATA_LICENSE</code> switch</h3>
+<h3>7.3 EUL vs SL — the <code>DATA_LICENSE</code> switch</h3>
 <p>A single flag in <code>code/lib/config.R</code> selects the edition
 and rewires everything:</p>
 <pre class="r"><code>DATA_LICENSE &lt;- &quot;EUL&quot;   # or &quot;SL&quot;</code></pre>
@@ -1256,7 +2503,7 @@ the project memory note on EUL vs SL for the detailed mapping, and
 data</strong> when you first get it.</p>
 </div>
 <div id="where-things-live-on-disk-paths" class="section level3">
-<h3>5.4 Where things live on disk (paths)</h3>
+<h3>7.4 Where things live on disk (paths)</h3>
 <p>All path logic is centralized in <code>code/lib/config.R</code>.
 <strong>Do not hardcode machine-specific paths anywhere else.</strong>
 The config resolves paths per machine using the OS username
@@ -1290,7 +2537,7 @@ these paths by matching your OS username
 its own branch — the file already has one worked example (the
 <code>orishoham</code> block) to copy. Steps:</p>
 <ol style="list-style-type: decimal">
-<li><p><strong>Confirm the data actually synced</strong> (§5.2): check
+<li><p><strong>Confirm the data actually synced</strong> (§7.2): check
 that
 <code>.../Dropbox/WFH_covid/UK project/understanding society uk all data/</code>
 exists on your machine and contains <code>UKDA-6614-stata/</code> and
@@ -1320,10 +2567,10 @@ default:</p>
 <p>Only change the <code>C:/Users/&lt;your-username&gt;/Dropbox/</code>
 prefix if your Dropbox is installed somewhere non-default.</p></li>
 </ul>
-<p><strong>On the SL secure machine (§7), also add</strong>
+<p><strong>On the SL secure machine (§9), also add</strong>
 <code>path_main_sl</code> and <code>data_out_root_sl</code> to the same
 two blocks, pointing at your account’s local disk — never Dropbox
-(§5.5):</p>
+(§7.5):</p>
 <pre class="r"><code>path_main_sl     &lt;- &quot;C:/Users/&lt;your-username&gt;/sl_secure_data/understanding society uk all data/UKDA-6931-stata/stata/stata14_se/ukhls&quot;
 data_out_root_sl &lt;- &quot;C:/Users/&lt;your-username&gt;/sl_secure_data/understanding society uk all data&quot;</code></pre>
 <p>Leave these two out if you don’t have SL access yet; the placeholder
@@ -1342,7 +2589,7 @@ data folder, not under
 </blockquote>
 </div>
 <div id="privacy-constraints-non-negotiable-the-two-tiers-are-different" class="section level3">
-<h3>5.5 Privacy constraints (non-negotiable) — the two tiers are
+<h3>7.5 Privacy constraints (non-negotiable) — the two tiers are
 different</h3>
 <p>The EUL and SL editions carry <strong>different</strong> handling
 obligations. Don’t conflate them:</p>
@@ -1350,7 +2597,7 @@ obligations. Don’t conflate them:</p>
 <li><strong>SL data (SN 6931, SN 6666 — detailed SIC/SOC, Local
 Authority District)</strong> is the more restricted tier: it may
 <strong>only</strong> be stored and processed on the approved secure
-machine (§7.1 — currently the TAU-managed desktop named in the licence
+machine (§9.1 — currently the TAU-managed desktop named in the licence
 application). It never goes onto a personal laptop, USB drive, personal
 cloud, or Dropbox folder, and never into an AI tool. This is a hard
 requirement of the Special Licence User Agreement.</li>
@@ -1359,22 +2606,22 @@ licence permits storing and processing it on an ordinary researcher
 machine, and in practice it lives in a Dropbox folder like any other
 project file. The binding constraint on EUL data is narrower but still
 absolute: <strong>no AI tool may ever have read access to it.</strong>
-See §12 for how this is enforced in practice (the short version: the
+See §14 for how this is enforced in practice (the short version: the
 folder holding EUL raw/derived data is kept out of the Dropbox sync
 scope on whichever machine is used for AI-assisted coding).</li>
 <li>Raw micro-data and derived <code>.rds</code> files (either tier)
 <strong>never go in the git repo</strong> — they live outside the repo
-per §5.4, regardless of which machine holds them.</li>
+per §7.4, regardless of which machine holds them.</li>
 <li>On <strong>this</strong> checkout (the one Claude Code/Codex work
 in) the licensed data are intentionally <strong>absent for both
-tiers</strong> — that’s the point of the sync-exclusion setup in §12. Do
+tiers</strong> — that’s the point of the sync-exclusion setup in §14. Do
 <strong>not</strong> try to run the full pipeline or probe data paths
 from here; this checkout is for code/docs only.</li>
 <li><strong>Claude and Codex already know not to run any R code in this
 project</strong> — <code>CLAUDE.md</code> and <code>AGENTS.md</code>
 both instruct them not to run the pipeline or execute scripts against
 data. They may read and edit code, but all actual running of the
-pipeline is done by the RA directly, on the run machine (§7). This isn’t
+pipeline is done by the RA directly, on the run machine (§9). This isn’t
 something you need to re-explain to either tool; it’s already part of
 their standing instructions for this repo, but you may need to enforce
 it or remind them. In any case they won’t be able to run the code since
@@ -1392,17 +2639,17 @@ Handling guide.</li>
 </div>
 </div>
 <div id="project-administration-onboarding-paperwork-do-this-before-any-data-access" class="section level2">
-<h2>6. Project administration &amp; onboarding paperwork (do this before
+<h2>8. Project administration &amp; onboarding paperwork (do this before
 any data access)</h2>
-<div id="project-identity-verify-with-ori" class="section level3">
-<h3>6.1 Project identity <em>[verify with Ori]</em></h3>
+<div id="project-identity" class="section level3">
+<h3>8.1 Project identity</h3>
 <ul>
 <li>UK Data Service <strong>project number 282609</strong>, title
 <strong>“Work from home in the UK”</strong>.</li>
-<li><strong>Project lead:</strong> Itay Saporta Eksten (University of
-Manchester / Tel Aviv University, Eitan Berglas School of Economics) —
-the project lead is the person who must invite you and who submits any
-changes to the project or team on the UKDS side.</li>
+<li><strong>Project lead:</strong> Currently - Itay Saporta Eksten (this
+is a formality in the UK data Service and may change) — the project lead
+is the person who must invite you and who submits any changes to the
+project or team on the UKDS side.</li>
 <li>Outgoing team member: Ori Nahshon Shoham (the role being handed
 over).</li>
 <li>Approved project window: <strong>2026-05-07 →
@@ -1410,9 +2657,9 @@ over).</li>
 </ul>
 </div>
 <div id="get-a-uk-data-service-account-and-be-added-to-the-project" class="section level3">
-<h3>6.2 Get a UK Data Service account and be added to the project</h3>
+<h3>8.2 Get a UK Data Service account and be added to the project</h3>
 <p>This has to happen <strong>before</strong> any of the paperwork in
-§6.3, and well before you can download or see any data:</p>
+§8.3, and well before you can download or see any data:</p>
 <ol style="list-style-type: decimal">
 <li><strong>Create your own UK Data Service account</strong> at <a href="https://ukdataservice.ac.uk/register" class="uri">https://ukdataservice.ac.uk/register</a> — use the email you
 want permanently associated with this project (institutional email is
@@ -1426,16 +2673,16 @@ project application — “Research team” — lists everyone who is allowed to
 see the raw data; the lead adds new members there and on the UKDS
 website).</li>
 <li><strong>Accept the invitation</strong> when it arrives at your
-registered email, then complete the paperwork in §6.3. You are not
+registered email, then complete the paperwork in §8.3. You are not
 approved to access SL data until that paperwork is submitted and UKDS
 confirms approval in writing — don’t download anything before that.</li>
 </ol>
 </div>
 <div id="required-forms" class="section level3">
-<h3>6.3 Required forms</h3>
+<h3>8.3 Required forms</h3>
 <p>All forms are in <code>data_agreements/</code> (signed/submitted
 copies in <code>data_agreements/submit/</code>). Order of operations,
-once you’ve been invited (§6.2):</p>
+once you’ve been invited (§8.2):</p>
 <ol style="list-style-type: decimal">
 <li><strong>Complete the Special Licence <em>additional researcher</em>
 form</strong> —
@@ -1455,9 +2702,9 @@ home-working access is needed, complete the agreement’s home-working
 Licence terms)</li>
 </ul></li>
 <li><strong>Email everything to UKDS</strong>
-(<code>help@ukdataservice.ac.uk</code>) and <strong>wait for written
-approval</strong>. Do not download or handle SL data until
-approved.</li>
+(<code>help@ukdataservice.ac.uk</code> - probably Itay needs to do this)
+and <strong>wait for written approval</strong>. Do not download or
+handle SL data until approved.</li>
 <li><strong>At the end of the engagement:</strong> complete
 <code>data_agreements/Data_Destruction_Form.docx</code> and securely
 delete the data per UKDS requirements.</li>
@@ -1470,38 +2717,49 @@ read §2.1–2.7 of it.</p>
 </div>
 </div>
 <div id="running-the-code-the-secure-remote-desktop-for-sl-work" class="section level2">
-<h2>7. Running the code (the secure remote desktop for SL work)</h2>
+<h2>9. Running the code (the secure remote desktop for SL work)</h2>
 <p>This section covers the <strong>Special Licence (SL)</strong> secure
-machine. EUL-only work does not require this — it can run on a normal
-Dropbox-synced machine (see §5.5 and §12 for the one constraint that
-still applies: no AI tool may read the data folder).</p>
+machine. EUL-only work does not strictly require this — it can run on a
+normal Dropbox-synced machine (see §7.5 and §14 for the one constraint
+that still applies: no AI tool may read the data folder). In practice,
+Ori ran all EUL code here too, on this same machine, rather than keeping
+a separate EUL-only coding/run machine: it’s simpler to maintain one
+place, and it keeps the data folder away from any machine that also runs
+AI coding tools, with no extra Selective Sync setup to get wrong. Doing
+the same is recommended.</p>
 <div id="what-the-environment-is" class="section level3">
-<h3>7.1 What the environment is</h3>
+<h3>9.1 What the environment is</h3>
 <p>Per the approved application, the SL data are <strong>hosted on a Tel
-Aviv University-managed desktop in a locked office</strong> and accessed
-<strong>remotely via TAU’s secure VPN</strong> (two-factor auth,
-personal accounts). The machine is BitLocker-encrypted, auto-locks on
-idle, and runs anti-malware. No data may be copied off it. This is the
-“remote desktop” referred to throughout this guide.</p>
+Aviv University-managed desktop in Itay’s locked office</strong> and
+accessed <strong>remotely via TAU’s secure VPN</strong> (two-factor
+auth, personal accounts). The machine is BitLocker-encrypted, auto-locks
+on idle, and runs anti-malware. No data may be copied off it. This is
+the “remote desktop” referred to throughout this guide.</p>
 </div>
-<div id="connection-access-secrets-obtain-from-ori-tau-it" class="section level3">
-<h3>7.2 Connection &amp; access <em>[secrets: obtain from Ori / TAU
-IT]</em></h3>
+<div id="connection-access" class="section level3">
+<h3>9.2 Connection &amp; access</h3>
 <ul>
 <li>You will need: a TAU account with VPN access + 2FA, and
-credentials/permission to the specific desktop that hosts the data.</li>
-<li>The VPN client, the desktop’s host/address, and login details are
-<strong>deliberately not written here</strong> (this file is committed
-to GitHub). <strong>Obtain them from Ori or TAU IT.</strong></li>
+credentials/permission to the specific desktop that hosts the data. This
+is done through GlobalProtect.</li>
+<li>You will need to install Google Authenticator on your phone for the
+VPN connection and NetIQ Authenticator for the remote desktop
+connection.</li>
+<li>Just ask Ludmila (<code>ludmilap@tauex.tau.ac.il</code>) for help
+setting this up.</li>
 <li>Connect to the VPN first, then open a Remote Desktop session to the
 host. Close the session when you are done.</li>
+<li>Set the desktop to lock after 10 minutes and require a password to
+wake — this is <strong>not</strong> the default TAU configuration, so
+you’ll need to change it yourself.</li>
 </ul>
 </div>
 <div id="environment-setup-on-the-secure-machine" class="section level3">
-<h3>7.3 Environment setup on the secure machine</h3>
+<h3>9.3 Environment setup on the secure machine</h3>
 <ul>
-<li><p><strong>R + RStudio</strong> (RStudio recommended; there is a
-<code>.Rproj</code> for the project).</p></li>
+<li><p><strong>Check R, RStudio, and GitHub Desktop are actually
+installed under your own Windows account</strong> . Any git client works
+instead of GitHub Desktop if you prefer the CLI (§12).</p></li>
 <li><p><strong>R packages used by the pipeline</strong> (install once):
 <code>tidyverse</code>, <code>haven</code>, <code>readxl</code>,
 <code>scales</code>, <code>forcats</code>, <code>modelsummary</code>,
@@ -1512,19 +2770,21 @@ host. Close the session when you are done.</li>
 <li><p><strong>Get the code onto the machine:</strong> Selective-Sync
 the <code>division-of-labor</code> folder here alongside the data, then
 pick it up with GitHub Desktop’s “Add local repository” rather than
-cloning (§10). The raw SL <em>data</em> still only ever lives in the
-approved local-disk location (§5.5) — this step is purely about the
+cloning (§12). The raw SL <em>data</em> still only ever lives in the
+approved local-disk location (§7.5) — this step is purely about the
 code.</p></li>
 <li><p><strong>Set paths:</strong> add/confirm your machine’s branch in
-<code>code/lib/config.R</code> (§5.4) so <code>path_main_*</code>,
+<code>code/lib/config.R</code> (§7.4) so <code>path_main_*</code>,
 <code>path_covid</code>, and <code>data_out_root</code> point at the
 right places.</p></li>
 </ul>
 </div>
 <div id="run-workflow" class="section level3">
-<h3>7.4 Run workflow</h3>
-<p>Always start from the repo root (so relative paths like
-<code>code/lib/config.R</code> resolve).</p>
+<h3>9.4 Run workflow</h3>
+<p>Always open the project via the <code>.Rproj</code> file (not by
+opening R/RStudio separately and navigating there) — this sets the
+working directory to the repo root, so relative paths like
+<code>code/lib/config.R</code> resolve correctly.</p>
 <ol style="list-style-type: decimal">
 <li><p><strong>Pre-flight check</strong> — confirms scripts, policy
 files, raw data, and output folders exist (and creates output
@@ -1635,7 +2895,7 @@ only those files), never the data.</p></li>
 </div>
 </div>
 <div id="code-coding-conventions" class="section level2">
-<h2>8. Code &amp; coding conventions</h2>
+<h2>10. Code &amp; coding conventions</h2>
 <ul>
 <li><strong>Staged pipeline, isolated environments.</strong> Stages
 communicate <strong>through disk</strong>, not memory. If a stage needs
@@ -1646,9 +2906,20 @@ in-memory objects exist.</li>
 lists, and the licence switch live in <code>code/lib/config.R</code>.
 Every stage <code>source()</code>s it. Don’t scatter machine-specific
 paths.</li>
-<li><strong>Shared logic in <code>code/lib/</code>.</strong> If several
-run scripts need the same behaviour, fix it in the relevant
-<code>lib/</code> helper, not in each run script.</li>
+<li><strong>Functions belong in <code>code/lib/</code>;
+<code>code/run/</code> scripts stay clean.</strong> This is a hard
+convention in this repo, not just a suggestion. A
+<code>code/run/*.R</code> script should read as orchestration —
+<code>source()</code> the relevant <code>code/lib/</code> files, load
+data, call functions, save outputs — not define new functions inline. If
+you catch yourself writing <code>function(...)</code> inside a run
+script, stop and move it to the matching <code>code/lib/</code> file (or
+a new one) instead, even if only that one run script calls it today.
+Exceptions should be rare and genuinely trivial — e.g. a tiny one-line
+local closure used once, right where it’s used — not a pattern to copy
+for anything with real logic in it. Keeping this boundary is what makes
+the run scripts in §5.1 readable top-to-bottom and keeps the actual
+logic reusable and easy to find.</li>
 <li><strong>Treat <code>figures/*</code> and <code>tables/*.tex</code>
 as generated outputs</strong>, not hand-edited source. Slide decks
 reference them by exact path, so <strong>preserve <code>.rds</code>
@@ -1660,8 +2931,11 @@ deliberately migrating the pipeline (and then update the consuming
 <li>COVID waves: <code>ca</code>–<code>ci</code>. Future/main follow-up
 waves: <code>j</code>–<code>o</code>. History candidate waves:
 <code>a</code>–<code>k</code>.</li>
-<li><strong>Baseline</strong> = most recent pre-COVID interview from
-main waves <strong>I/J/K</strong>, prioritizing 2019 interviews.</li>
+<li><strong>Baseline</strong> = each person’s <strong>2019</strong>
+interview from main waves <strong>I/J/K</strong> (the only waves whose
+fieldwork overlaps 2019), preferring the latest wave (K &gt; J &gt; I)
+if more than one falls in 2019 — not simply “most recent interview”
+regardless of year (§2.2).</li>
 <li><strong>Grouping is by <em>baseline</em> SIC/SOC</strong>, not
 post-treatment status (<code>code/lib/work_groups.R</code>).</li>
 </ul></li>
@@ -1679,7 +2953,7 @@ files.</li>
 <hr />
 </div>
 <div id="current-outputs-where-theyre-consumed" class="section level2">
-<h2>9. Current outputs &amp; where they’re consumed</h2>
+<h2>11. Current outputs &amp; where they’re consumed</h2>
 <p><strong>Figures</strong> are written under <code>figures/</code> in
 organized subfolders defined by the <code>fig_path_*</code> variables in
 <code>config.R</code> (e.g. <code>figures/descriptives/covid/</code>,
@@ -1714,16 +2988,26 @@ placeholders)</td>
 <td>02, 02b, 02c</td>
 </tr>
 <tr class="even">
-<td><code>couples_graphs.tex</code></td>
-<td>main couple-treatment deck: both treatments, event studies + balance
-tables</td>
-<td>02c, 02d, 03a</td>
+<td><code>couples_graphs_short.tex</code></td>
+<td><strong>the most up-to-date couple-treatment deck.</strong> Wife-key
+treatment only; each outcome prefixed by a variable-definition slide and
+a baseline-distribution slide; includes the 2018-baseline-fallback
+appendix (§2.2)</td>
+<td>02d, 02e, 03a</td>
 </tr>
 <tr class="odd">
-<td><code>couples_graphs_short.tex</code></td>
-<td>shortened deck: wife-key treatment only; each outcome prefixed by a
-baseline-distribution slide</td>
-<td>02d, 02e, 03a</td>
+<td><code>couples_graphs.tex</code> (→
+<code>couples_graphs.pdf</code>)</td>
+<td>Similar in spirit but <strong>longer and covers both
+treatments</strong> (wife-key and husband-shutdown) with event studies +
+balance tables for each. Kept in parallel with
+<code>couples_graphs_short.tex</code> rather than superseded by it, but
+<strong>updated less often</strong> — treat it as possibly slightly
+behind: it doesn’t have the per-outcome variable-definition slides, and
+may be missing recent outcome/appendix additions that only landed in the
+short deck. Check <code>couples_graphs_short.tex</code> first when the
+two seem to disagree.</td>
+<td>02c, 02d, 03a</td>
 </tr>
 <tr class="even">
 <td><code>meeting_slides.tex</code></td>
@@ -1750,13 +3034,34 @@ baseline-distribution slide</td>
 <hr />
 </div>
 <div id="git-workflow-from-scratch" class="section level2">
-<h2>10. Git workflow (from scratch)</h2>
+<h2>12. Git workflow (from scratch)</h2>
 <p>This repo has <strong>two remotes</strong>: <code>origin</code>
-(GitHub) and <code>overleaf</code> (Overleaf — see §11).</p>
+(GitHub) and <code>overleaf</code> (Overleaf — see §13).</p>
+<div id="before-you-start-prerequisites" class="section level3">
+<h3>Before you start (prerequisites)</h3>
+<p>If any of these already apply to you, skip ahead — otherwise do them
+in order:</p>
+<ol style="list-style-type: decimal">
+<li><strong>No GitHub account?</strong> Create one for free at <a href="https://github.com/join" class="uri">https://github.com/join</a>.
+Any email is fine; it doesn’t need to be institutional.</li>
+<li><strong>Get added to the repo.</strong> Email <strong>Ori</strong>
+at <code>ori.shoham1@gmail.com</code> or <code>orins@mit.edu</code> with
+your GitHub username, and ask to be added as a collaborator on
+<code>Ori-Shoham/division-of-labor</code>. You won’t be able to push or
+pull until this happens — do this early, since it depends on Ori
+actually seeing the email.</li>
+<li><strong>No git client installed?</strong> Install <strong>GitHub
+Desktop</strong> (<a href="https://desktop.github.com" class="uri">https://desktop.github.com</a>) — the simplest option, and
+what the rest of this guide assumes — or any git client/CLI you already
+prefer. If you’re not sure how to install or configure one, your AI
+coding tool (Claude Code, Codex, etc.) can walk you through it step by
+step; just ask it.</li>
+</ol>
+<p>Once all three are done, set up the repo itself on your machine:</p>
 <p><strong>One-time setup: use “Add local repository”, not
 “Clone”.</strong> The <code>division-of-labor</code> repo is
 Dropbox-synced on every machine on this project, including the run/SL
-machine (§7). It therefore already arrives fully formed —
+machine (§9). It therefore already arrives fully formed —
 <code>.git/</code> and full history included — as soon as you’re added
 to the shared Dropbox folder and it finishes syncing.</p>
 <ol style="list-style-type: decimal">
@@ -1771,9 +3076,9 @@ with no download or re-fetch. Using the git CLI instead: just
 work immediately); run
 <code>git config user.name</code>/<code>user.email</code> if this is a
 new machine.</li>
-<li>Get added as a collaborator on the GitHub repo (<code>origin</code>)
-so you can push/pull, and confirm <code>git status</code> /
-<code>git log</code> look sane before doing anything.</li>
+<li>Confirm <code>git status</code> / <code>git log</code> look sane,
+and that you can actually push (you should already be a collaborator per
+prerequisite #2 above) before doing anything else.</li>
 </ol>
 <p>Only fall back to a plain <code>git clone</code> if a machine has no
 access to the shared Dropbox folder:</p>
@@ -1787,13 +3092,18 @@ Dropbox and git can conflict with each other. When a role passes from
 one person to another, the outgoing person should stop
 committing/pulling once the incoming person is confirmed working;
 passive Dropbox syncing/browsing afterward is harmless.</p>
-<p><strong>Everyday loop</strong></p>
-<pre class="bash"><code>git status                 # see what changed (do this often)
-git pull origin main       # get latest before you start
-# … edit …
-git add &lt;specific files&gt;   # stage deliberately, not &quot;git add .&quot;
-git commit -m &quot;message&quot;
-git push origin main</code></pre>
+<p><strong>Everyday habit: commit and push regularly.</strong> Most of
+you will be working in GitHub Desktop, not the command line — the exact
+clicks don’t matter as much as the habit itself. Every time you finish a
+meaningful chunk of work (a script edit, a new figure, a fixed bug),
+stage it, write a short commit message describing what changed, and
+push. Don’t let changes pile up uncommitted for days — small, frequent
+commits are much easier for anyone (including your future self, or the
+RA after you) to follow than one giant commit. Pull before you start a
+new session too, so you’re never working from a stale copy. If you
+already know git well enough to prefer the CLI
+(<code>git status</code>/<code>add</code>/<code>commit</code>/<code>push</code>/<code>pull</code>),
+go ahead — the habit matters more than the tool.</p>
 <p><strong>Dropbox caveat (important here).</strong> The repo lives
 inside Dropbox, so <code>git status</code> often shows
 <strong>noise</strong>: timestamp churn, sync conflict files
@@ -1805,55 +3115,105 @@ figure is only meaningful if you intended to regenerate it. Make
 <code>git status</code> does <strong>not</strong> mean “regenerate
 everything” — check whether Dropbox or a cleanup moved it first.</p>
 <p><strong>Branches.</strong> <code>main</code> is the working branch.
-There is an <code>overleaf-backup</code> branch and dated
-<code>overleaf-YYYY-MM-DD-…</code> branches that exist only for Overleaf
-syncing (§11) — don’t develop on those.</p>
+You’ll also see an <code>overleaf-backup</code> branch and dated
+<code>overleaf-YYYY-MM-DD-…</code> branches in the repo’s history —
+these are leftovers from an earlier, manual approach to Overleaf
+syncing, not something the current process creates or uses (§13’s
+<code>overleaf integration/</code> scripts track sync state differently,
+via a git ref, not branches). Don’t develop on any of them; they’re
+historical, not active.</p>
 <hr />
 </div>
+</div>
 <div id="overleaf-workflow-writing-git" class="section level2">
-<h2>11. Overleaf workflow (writing ↔︎ git)</h2>
+<h2>13. Overleaf workflow (writing ↔︎ git)</h2>
 <p>The <code>.tex</code> writing is mirrored to
-<strong>Overleaf</strong> via Overleaf’s <strong>git bridge</strong>.
-The Overleaf project is wired in as the <code>overleaf</code>
+<strong>Overleaf</strong>. Normally Overleaf offers a one-click
+<strong>GitHub Sync</strong> integration for exactly this — but this
+project is <strong>too heavy</strong> for it (too many/too large
+generated files — all the figures, tables, etc. — for Overleaf’s
+built-in sync to handle). So instead of GitHub Sync, this repo talks to
+Overleaf directly over <strong>git</strong>, through a second
 remote:</p>
 <pre><code>overleaf  https://git.overleaf.com/&lt;project-id&gt;   (fetch/push)</code></pre>
 <p>(<code>origin</code> = GitHub; <code>overleaf</code> = the Overleaf
-project’s git endpoint. Overleaf’s <code>master</code> branch ↔︎ our
-content.)</p>
-<p><strong>How the two remotes relate.</strong> GitHub
-(<code>origin</code>) is the source of truth for <strong>code +
-TeX</strong>. Overleaf is where co-authors <strong>edit the TeX in the
-browser</strong>. Changes therefore flow both ways and must be
-reconciled by hand. The <code>overleaf-backup</code> branch and the
-dated <code>overleaf-YYYY-MM-DD-HHMM</code> branches in the history are
-snapshots taken at each sync so a bad merge can be recovered.</p>
-<p><strong>Typical sync ritual</strong> <em>[confirm exact steps with
-Ori — this is the general pattern]</em>:</p>
+project’s own git endpoint, separate from GitHub. Overleaf’s
+<code>master</code> branch holds the writing content.)</p>
+<p><strong>You do not need to run any git/bash commands for this
+yourself.</strong> Two ready-made scripts in
+<code>overleaf integration/</code> handle the entire sync in each
+direction — just run them (double-click the <code>.bat</code> file, or
+run it from Explorer/PowerShell; no arguments needed):</p>
 <ul>
-<li><p><strong>Pull co-authors’ Overleaf edits into git:</strong></p>
-<pre class="bash"><code>git fetch overleaf
-git checkout -b overleaf-$(date +%F-%H%M) overleaf/master   # snapshot the Overleaf state
-git checkout main
-git merge overleaf-&lt;that-snapshot&gt;                          # bring edits into main
-# resolve conflicts in the .tex files, then:
-git push origin main</code></pre></li>
-<li><p><strong>Push your git-side TeX changes back to
-Overleaf:</strong></p>
-<pre class="bash"><code>git push overleaf main:master</code></pre></li>
-<li><p>Keep <code>overleaf-backup</code> updated as a safety snapshot
-before risky merges.</p></li>
+<li><strong><code>overleaf integration/fetch_and_merge_from_overleaf.bat</code></strong>
+— pulls whatever co-authors changed on Overleaf since the last sync and
+commits it into your current local branch as “Import Overleaf changes.”
+Run this when you know someone edited the deck/proposal text in the
+Overleaf web editor and you want those edits locally.</li>
+<li><strong><code>overleaf integration/push_to_overleaf.bat</code></strong>
+— pushes your current committed files to Overleaf as a single small
+commit, <strong>without</strong> sending the full GitHub history (that’s
+the “too heavy” part GitHub Sync can’t do). It deliberately leaves
+<code>couples_graphs.pdf</code> out of what it sends to Overleaf. Run
+this after you’ve regenerated figures/tables or edited <code>.tex</code>
+locally and want Overleaf’s copy to catch up.</li>
 </ul>
-<p>Because figures/tables are generated on the (data) side and TeX is
-edited on the Overleaf side, the safest habit is: <strong>regenerate
-assets → commit to GitHub → push to Overleaf</strong>, and <strong>pull
-Overleaf text edits back</strong> before regenerating, to avoid
-clobbering co-author edits.</p>
+<p><strong>Rules the scripts enforce for you</strong> (so you don’t have
+to remember them):</p>
+<ul>
+<li>Both scripts <strong>require a clean working tree</strong> — commit
+your changes in GitHub Desktop first. If anything is uncommitted, the
+script stops and tells you to commit or discard it.</li>
+<li><strong>Order matters:</strong> if Overleaf has changes you haven’t
+imported yet, the push script refuses and tells you to run the
+fetch/merge script first. So the safe habit is simply:
+<strong>fetch-and-merge before you push</strong>, every time.</li>
+<li>If a script fails with a 403 error, it’s almost always stale saved
+credentials — delete the saved <code>git.overleaf.com</code> entry in
+Windows Credential Manager and re-run.</li>
+<li>If the push script fails with “HTTP 413,” the committed file tree is
+still too large for Overleaf — that means something big got added that
+shouldn’t be tracked; ask before forcing it through.</li>
+</ul>
+<p>The fetch/merge script already commits the imported Overleaf changes
+locally for you — after it finishes, just push that commit to GitHub
+from GitHub Desktop as usual (§12). The push script doesn’t touch your
+local commits at all; it only sends your already-committed files to
+Overleaf.</p>
 <hr />
 </div>
 <div id="ai-coding-tools" class="section level2">
-<h2>12. AI coding tools</h2>
-<div id="claude-code-primary" class="section level3">
-<h3>Claude Code (primary)</h3>
+<h2>14. AI coding tools</h2>
+<p><strong>Use AI for coding on this project — and use it as a system
+installed on your computer, not a chat window.</strong> This repo is
+large, interconnected, and full of conventions (naming, the run/lib
+split in §10, the pipeline structure in §5); an <em>agentic coding
+tool</em> that runs directly in the repo — Claude Code or Codex, both
+covered below — can read <code>CLAUDE.md</code>/ <code>AGENTS.md</code>
+once, keep that context across a session, actually open and edit the
+real files, run checks, and follow this project’s guardrails
+automatically. A general AI chat window (ChatGPT, Claude.ai, etc. in a
+browser tab) can’t do any of that: you’d be manually pasting code back
+and forth, it has no persistent memory of this repo’s conventions, and —
+most importantly here — it’s far too easy to accidentally paste
+something you shouldn’t, like real values from restricted data, into a
+chat that isn’t bound by this repo’s guardrails at all. Install one of
+the tools below and point it at the repo; don’t default to a chat
+tab.</p>
+<p><strong>Which tool, and why.</strong> Ori originally worked with
+<strong>Codex</strong>, then mostly switched to <strong>Claude
+Code</strong> — but that switch was practical, not a verdict on Codex:
+the university’s ChatGPT/Codex account kept running out of tokens
+quickly, which made Claude Code more usable day-to-day. Both Codex and
+Claude Code worked fine on this project. Pick whichever one you have
+reliable access to (or use both). Neither needs setup work to get
+started: <code>CLAUDE.md</code> and <code>AGENTS.md</code> already exist
+at the repo root for exactly this purpose — Claude Code reads
+<code>CLAUDE.md</code>, Codex reads <code>AGENTS.md</code> (the two are
+kept as duplicates of each other; see the note at the top of
+<code>AGENTS.md</code>).</p>
+<div id="claude-code" class="section level3">
+<h3>Claude Code</h3>
 <ul>
 <li><strong>Install / auth:</strong> Claude Code is Anthropic’s CLI
 (also available as desktop/IDE/web). Install per the official docs and
@@ -1873,11 +3233,23 @@ plan” rule. The agent reads/writes these across sessions.</li>
 plan before editing — use it for anything non-trivial; approve the plan
 before it writes code.</li>
 </ul></li>
-<li><strong>Project guardrails for any AI tool here (critical) — how
-this is actually set up:</strong>
+</ul>
+</div>
+<div id="codex" class="section level3">
+<h3>Codex</h3>
+<ul>
+<li><strong>Install / auth:</strong> Codex is OpenAI’s CLI coding agent.
+Install per the official docs and sign in with whichever OpenAI/ChatGPT
+account you have access to. It reads <code>AGENTS.md</code> for the same
+project context Claude Code gets from <code>CLAUDE.md</code>.</li>
+</ul>
+</div>
+<div id="guardrails-for-any-ai-tool-here-critical-applies-regardless-of-which-you-use" class="section level3">
+<h3>Guardrails for any AI tool here (critical — applies regardless of
+which you use)</h3>
 <ul>
 <li><strong>SL data</strong> never touches a machine that runs AI tools
-at all — it only exists on the TAU secure desktop (§7), which has no
+at all — it only exists on the TAU secure desktop (§9), which has no
 Claude Code / Codex on it. That tier is enforced by physical/network
 isolation, not by discipline.</li>
 <li><strong>EUL data</strong> <em>is</em> allowed on an ordinary laptop,
@@ -1888,14 +3260,14 @@ data folder from any machine that runs (or will ever run) an AI coding
 tool. Concretely: the project Dropbox folder syncs normally, but the
 specific “understanding society uk all data” subfolder (the
 <code>path_main_*</code> / <code>path_covid</code> /
-<code>data_out_root</code> targets from §5.4) is deselected in Selective
+<code>data_out_root</code> targets from §7.4) is deselected in Selective
 Sync on this machine, so it simply doesn’t exist on disk here — an AI
 tool has no path to read even if asked. That’s why this checkout has no
 data present, and why <code>00_check_inputs.R</code> will report the
 data roots missing if you run it here (expected — don’t “fix” it).</li>
 <li><strong>Practical setup: keep the two roles on separate
 machines</strong> — the coding machine and run machine described in
-§5.2. Don’t try to toggle one machine between the two states; that’s
+§7.2. Don’t try to toggle one machine between the two states; that’s
 exactly the kind of manual step that eventually gets forgotten.</li>
 <li><strong>Selective Sync generally, not just for the data
 folder:</strong> on either machine, only sync the project folders you
@@ -1915,40 +3287,36 @@ tool).</li>
 agent to run the pipeline or probe data paths</strong> to “see” the data
 — it can’t, and shouldn’t be made able to. Use code inspection and the
 committed figures/tables instead.</li>
-<li>The agent must follow §8 (“stick to the approved plan”) — it should
+<li>The agent must follow §10 (“stick to the approved plan”) — it should
 not introduce unrequested design changes.</li>
-</ul></li>
 </ul>
-</div>
-<div id="codex-secondary-verify-with-ori" class="section level3">
-<h3>Codex (secondary) <em>[verify with Ori]</em></h3>
-<p>Codex / OpenAI tooling is also used on occasion as an alternative
-coding assistant. It reads the same <code>AGENTS.md</code> for project
-context. The <strong>same data-privacy guardrails apply without
-exception</strong>: no licensed data, no raw extracts, no running
-against restricted data. Pick whichever assistant you prefer for code
-edits; keep both pointed at the committed code only.</p>
 <hr />
 </div>
 </div>
 <div id="where-things-stand-first-tasks-draft-ori-to-edit" class="section level2">
-<h2>13. Where things stand &amp; first tasks <em>[draft — Ori to
+<h2>15. Where things stand &amp; first tasks <em>[draft — Ori to
 edit]</em></h2>
 <p><em>Inferred from recent git history and the current outputs; Ori
 should correct/replace this.</em></p>
 <ul>
-<li>The <strong>EUL pipeline is the mature path</strong>: baseline
-(2019-priority), couple panels, sample tables, couple-treatment
+<li>The <strong>EUL pipeline is the mature path</strong>: the 2019-only
+baseline (§2.2), couple panels, sample tables, couple-treatment
 descriptives, baseline-distribution figures, and event-study analogs all
 run and feed the decks (<code>couples_graphs.tex</code>,
 <code>couples_graphs_short.tex</code>,
 <code>meeting_slides_descriptive_analysis.tex</code>).</li>
 <li>Recent work (see <code>git log</code>) has been on <strong>baseline
-distribution figures</strong> (2018/2019 baselines),
+distribution figures</strong>, the <strong>2018 baseline-fallback
+exploration</strong> (§2.2,
+<code>code/explore_baseline_year_2018_2019.R</code>, results already in
+<code>couples_graphs_short.tex</code>’s appendix),
 <strong>winsorizing</strong>, <strong>event-study updates</strong>, and
 <strong>slide/Overleaf cleanup</strong>.</li>
 <li><strong>Likely next steps:</strong>
 <ol style="list-style-type: decimal">
+<li>Decide whether to promote the <strong>2018 baseline
+fallback</strong> from exploration to the production baseline, given the
+observation-gain figures already produced.</li>
 <li>Move from EUL to <strong>SL</strong> once the Special Licence data
 is in hand: set <code>DATA_LICENSE    &lt;- &quot;SL&quot;</code>, verify
 <code>jbsic07</code>/<code>jbsoc10</code> widths, re-derive
@@ -1965,7 +3333,7 @@ events) and the youngest-child heterogeneity cut.</li>
 <hr />
 </div>
 <div id="contacts-resources-glossary" class="section level2">
-<h2>14. Contacts, resources &amp; glossary</h2>
+<h2>16. Contacts, resources &amp; glossary</h2>
 <p><strong>People</strong></p>
 <ul>
 <li>Project lead: <strong>Itay Saporta Eksten</strong> —
@@ -2002,8 +3370,10 @@ Classification codes (industry / job).</li>
 expected to work outside the home.</li>
 <li><strong>Shutdown sector</strong> — IFS-defined sector forced to
 close in early COVID.</li>
-<li><strong>Baseline</strong> — each person’s most recent pre-COVID
-interview (main waves I/J/K, 2019-first).</li>
+<li><strong>Baseline</strong> — each person’s <strong>2019</strong>
+interview from main waves I/J/K (the latest of I/J/K that happened to
+fall in 2019 for that person), not simply their most recent
+interview.</li>
 <li><strong>Event study</strong> — DiD specification tracing outcome
 differences by event time relative to COVID onset, treated vs comparison
 couples.</li>

@@ -32,8 +32,10 @@
 # Income:
 #   fimngrs_dv     : gross personal income per month
 #   fihhmngrs_dv   : gross household income (month before interview)
-#   paygu_dv       : usual gross pay per month from current job
-#   fimnlabgrs_dv  : total monthly labour income gross
+#   paygu_dv       : usual gross pay per month from current/MAIN job only
+#   fimnlabgrs_dv  : total monthly labour income gross = paygu_dv (main job)
+#                    + seearngrs_dv (self-employment) + j2pay_dv (second job) —
+#                    broader than paygu_dv, not just a renamed copy of it
 #
 # Work location / WFH:
 #   jbpl           : work location (1 home,2 employer,3 travel,4 other)
