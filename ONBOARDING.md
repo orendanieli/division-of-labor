@@ -15,7 +15,7 @@
 
 ---
 
-## 0. Read this first (the 30-minute path)
+## 0. Read this first 
 
 If you do nothing else, read these in order:
 
@@ -314,15 +314,13 @@ required file (`00_check_inputs.R` looks for exactly these):
 - `{cw}_indresp_w.dta` — the COVID survey's individual response file for wave `cw`,
   **web-mode** respondents. This is the **only** COVID file `00_check_inputs.R` requires and
   the only one `code/lib/covid_loader.R` loads.
-- `{cw}_indresp_t.dta` — a **telephone-mode** counterpart that also exists on disk for at
-  least some COVID waves (e.g. `ca_indresp_t.dta`). It is a smaller, differently-fielded
-  top-up (respondents interviewed by phone rather than the web questionnaire) and was **not
-  run in every wave**, so it isn't a consistent panel on its own. **`00_check_inputs.R` does
-  not check for it, and the pipeline does not load or merge it** — it is not part of the
-  required-inputs checklist at all, so its absence never blocks the pre-flight check. If you
-  need to check exactly which waves have a `_t` file and whether it's worth incorporating
-  (e.g. for sample size), check the raw data folder directly; this hasn't been
-  systematically verified. _[verify with Ori]_
+- `{cw}_indresp_t.dta` — a **telephone-mode** counterpart that also exists on disk for
+  **two of the nine COVID waves**. It adds only **~3–5% more observations** on the
+  waves where it exists. **`00_check_inputs.R` does not check for it, and the pipeline does
+  not load or merge it** — it is not part of the required-inputs checklist at all, so its
+  absence never blocks the pre-flight check. This was a deliberate call, not an oversight:
+  the observation gain is too small to justify the extra cleaning/harmonization effort of
+  merging a differently-fielded mode into the panel.
 
 Person-level records are keyed by `pidp` (a person identifier stable across waves and
 across the main/COVID surveys — the same `pidp` links a person's main-survey and
@@ -482,9 +480,9 @@ CLAUDE.md, AGENTS.md   agent guidance; ONBOARDING.md   this file
 ## 5. Data & licensing (full walkthrough)
 
 ### 5.1 The datasets
-This project uses three UK Data Service (UKDS) study families. We currently don't have
-access to the special license data (SL) yet. However, the pipeline is ready for 
-switching between the **EUL** and **SL** editions of the main study via one flag (§5.3).
+This project uses three UK Data Service (UKDS) study families. Only the **EUL** edition is
+currently in use; the pipeline already supports switching to **SL** via one flag (§5.3) once
+that access is granted.
 
 | SN | What it is | Role here |
 |---|---|---|
@@ -505,26 +503,29 @@ switching between the **EUL** and **SL** editions of the main study via one flag
    a licensed user of the data; that's required whether you get a fresh download or a
    teammate's already-synced Dropbox copy.
 
-2. **In practice, for EUL data, join the shared Dropbox — don't download — but be deliberate
-   about *which machine* you let it sync to.** The EUL data we currently use (SN 6614 main
-   study, SN 8644 COVID study — see §5.1; we don't have SL yet) is already sitting in the
+2. **For EUL data, join the shared Dropbox folder — don't download from UKDS.** The EUL data
+   currently in use (SN 6614 main study, SN 8644 COVID study — §5.1) already lives in the
    team's shared Dropbox project folder, under
    `.../Dropbox/WFH_covid/UK project/understanding society uk all data/`. Once you're an
    approved project member (step 1), ask the project lead to add you to that shared Dropbox
-   folder — **you do not need to download anything from UKDS yourself.** Before you let
-   anything sync, decide your machine setup:
-   - **You need (at least) two separate roles/machines**, never combined on one: a **coding
-     machine** where you use Claude Code/Codex/other AI tools to edit the repo, and a
-     **run machine** where you actually execute the R pipeline against real data. A machine
-     that runs AI tools must **never** have this data folder synced to it — see §12 for
-     exactly how to set that up with Dropbox's **Selective Sync** feature.
-   - On your **run machine**, use Selective Sync to bring down the
-     `understanding society uk all data` folder (full sync there is fine — no AI tool runs
-     on that machine).
-   - On **either** machine, use Selective Sync to only pull down the project-relevant
-     folders (this repo, and — on the run machine only — the data folder) rather than your
-     whole Dropbox account. Otherwise you'll needlessly sync unrelated personal files and
-     burn disk space.
+   folder — **you do not need to download anything from UKDS yourself.**
+
+   This project uses two machines:
+   - **Coding machine** — your personal/work computer, running Claude Code/Codex and other AI
+     tools to edit the repo. It can also be the machine you use to connect remotely to the run
+     machine.
+   - **Run machine** — the computer in Itay's office at Berglas, reached via TAU VPN and
+     remote desktop, where the R pipeline actually executes against real data.
+
+   On the **run machine**, use Dropbox's **Selective Sync** to bring down both the
+   `understanding society uk all data` folder and the `division-of-labor` code folder —
+   full sync of both is fine here, since no AI coding tool ever runs on this machine. Pick up
+   the code with GitHub Desktop's "Add local repository" rather than cloning (§10). Select
+   only these project folders, not your whole Dropbox account.
+
+   On the **coding machine**, Selective-Sync the `division-of-labor` repo folder but exclude
+   the data folder — see §12 for exactly how.
+
    Once the data is synced on your run machine, skip to §5.4 to point `code/lib/config.R` at
    your local copy before running any code.
 
@@ -536,14 +537,9 @@ switching between the **EUL** and **SL** editions of the main study via one flag
      adds variables.
    - COVID waves: `{cw}_indresp_w.dta` (e.g. `cd_indresp_w.dta`).
 
-4. Place the unpacked study folders **outside the git repo** (see §5.4).
-   - **EUL** (SN 6614, SN 8644): can go in your normal Dropbox project data folder, as long
-     as that folder is excluded from sync on any machine that also runs an AI coding tool
-     (§12).
-   - **SL** (SN 6931, SN 6666): must go **only** inside the approved encrypted location on
-     the SL secure machine (§7) — never in Dropbox, never anywhere else. There is no
-     shared-Dropbox shortcut for SL data; it only ever reaches you through the secure-machine
-     process in §7, once approved.
+4. Place the unpacked study folders **outside the git repo** (see §5.4) — the placement
+   rules for EUL vs. SL data are in §5.5. There is no shared-Dropbox shortcut for SL data; it
+   only ever reaches you through the secure-machine process in §7, once approved.
 
 ### 5.3 EUL vs SL — the `DATA_LICENSE` switch
 A single flag in `code/lib/config.R` selects the edition and rewires everything:
@@ -593,24 +589,32 @@ paths anywhere else.** The config resolves paths per machine using the OS userna
 > 2. **Find your OS username** — in R: `Sys.info()[["user"]]`.
 > 3. **Add a branch to `code/lib/config.R`**, mirroring the existing `orishoham` block
 >    exactly, just with your username and Dropbox path. There are **two** places to add it
->    (both already exist for `orishoham` — search the file for that name to find them):
+>    (both already exist for `orishoham` — search the file for that name to find them).
 >    - Near the top, right after `path_covid` is first set:
 >      ```r
 >      if (user == "<your-username>") {
 >        dropbox_path <- "C:/Users/<your-username>/Dropbox/"
 >        path_main_eul <- paste0(dropbox_path, "WFH_covid/UK project/understanding society uk all data/UKDA-6614-stata/stata/stata14_se/ukhls")
->        path_main_sl  <- paste0(dropbox_path, "WFH_covid/UK project/understanding society uk all data/UKDA-6931-stata/stata/stata14_se/ukhls")
 >        path_covid    <- paste0(dropbox_path, "WFH_covid/UK project/understanding society uk all data/UKDA-8644-stata/stata/stata13_se/")
 >      }
 >      ```
->    - Further down, next to the existing `data_out_root` default:
+>    - Further down, next to the existing `data_out_root_eul` default:
 >      ```r
 >      if (user == "<your-username>") {
->        data_out_root <- paste0(dropbox_path, "WFH_covid/UK project/understanding society uk all data")
+>        data_out_root_eul <- paste0(dropbox_path, "WFH_covid/UK project/understanding society uk all data")
 >      }
 >      ```
 >    Only change the `C:/Users/<your-username>/Dropbox/` prefix if your Dropbox is installed
 >    somewhere non-default.
+>
+>    **On the SL secure machine (§7), also add** `path_main_sl` and `data_out_root_sl` to the
+>    same two blocks, pointing at your account's local disk — never Dropbox (§5.5):
+>    ```r
+>    path_main_sl     <- "C:/Users/<your-username>/sl_secure_data/understanding society uk all data/UKDA-6931-stata/stata/stata14_se/ukhls"
+>    data_out_root_sl <- "C:/Users/<your-username>/sl_secure_data/understanding society uk all data"
+>    ```
+>    Leave these two out if you don't have SL access yet; the placeholder defaults are inert
+>    while `DATA_LICENSE` stays `"EUL"`.
 > 4. **Verify** by running, from the repo root:
 >    ```r
 >    source("code/run/00_check_inputs.R")
@@ -642,6 +646,13 @@ The EUL and SL editions carry **different** handling obligations. Don't conflate
   intentionally **absent for both tiers** — that's the point of the sync-exclusion setup in
   §12. Do **not** try to run the full pipeline or probe data paths from here; this checkout
   is for code/docs only.
+- **Claude and Codex already know not to run any R code in this project** — `CLAUDE.md` and
+  `AGENTS.md` both instruct them not to run the pipeline or execute scripts against data.
+  They may read and edit code, but all actual running of the pipeline is done by the RA
+  directly, on the run machine (§7). This isn't something you need to re-explain to either
+  tool; it's already part of their standing instructions for this repo, but you may need to enforce
+  it or remind them. In any case they won't be able to run the code since the data is not available
+  to them but it is wasteful for them to try.
 - Only **repo-safe artifacts** may leave the secure/EUL environment into shared or public
   places: scripts, `figures/`, `tables/` fragments, `.tex`. Anything you export must be
   **aggregated and disclosure-safe** (no small cells, no raw SIC/SOC or fine geography) per
@@ -654,8 +665,8 @@ The EUL and SL editions carry **different** handling obligations. Don't conflate
 ### 6.1 Project identity  _[verify with Ori]_
 
 - UK Data Service **project number 282609**, title **"Work from home in the UK"**.
-- **Project lead:** Itay Saporta Eksten (University of Manchester / Tel Aviv University,
-  Eitan Berglas School of Economics) — the project lead is the person who must invite you
+- **Project lead:** Currently - Itay Saporta Eksten (this is a formality
+  in the UK data Service and may change) — the project lead is the person who must invite you
   and who submits any changes to the project or team on the UKDS side.
 - Outgoing team member: Ori Nahshon Shoham (the role being handed over).
 - Approved project window: **2026-05-07 → 2029-12-31**.
@@ -693,8 +704,9 @@ Order of operations, once you've been invited (§6.2):
 3. **Read** the obligations you are agreeing to:
    - `data_agreements/cd171-researchdatahandling.pdf` (Research Data Handling & Security)
    - `data_agreements/cd137-enduserlicence.pdf` (End User Licence terms)
-4. **Email everything to UKDS** (`help@ukdataservice.ac.uk`) and **wait for written
-   approval**. Do not download or handle SL data until approved.
+4. **Email everything to UKDS** (`help@ukdataservice.ac.uk` - probably Itay needs to do this)
+   and **wait for written
+   approval**. Do not download or handle SL data until approved. 
 5. **At the end of the engagement:** complete `data_agreements/Data_Destruction_Form.docx`
    and securely delete the data per UKDS requirements.
 
@@ -707,28 +719,37 @@ description of what the project is permitted to do — read §2.1–2.7 of it.
 ## 7. Running the code (the secure remote desktop for SL work)
 
 This section covers the **Special Licence (SL)** secure machine. EUL-only work does not
-require this — it can run on a normal Dropbox-synced machine (see §5.5 and §12 for the one
-constraint that still applies: no AI tool may read the data folder).
+strictly require this — it can run on a normal Dropbox-synced machine (see §5.5 and §12 for
+the one constraint that still applies: no AI tool may read the data folder). In practice, Ori
+ran all EUL code here too, on this same machine, rather than keeping a separate EUL-only
+coding/run machine: it's simpler to maintain one place, and it keeps the data folder away
+from any machine that also runs AI coding tools, with no extra Selective Sync setup to get
+wrong. Doing the same is recommended.
 
 ### 7.1 What the environment is
 Per the approved application, the SL data are **hosted on a Tel Aviv University-managed
-desktop in a locked office** and accessed **remotely via TAU's secure VPN** (two-factor
+desktop in Itay's locked office** and accessed **remotely via TAU's secure VPN** (two-factor
 auth, personal accounts). The machine is BitLocker-encrypted, auto-locks on idle, and runs
 anti-malware. No data may be copied off it. This is the "remote desktop" referred to
 throughout this guide.
 
-### 7.2 Connection & access  _[secrets: obtain from Ori / TAU IT]_
+### 7.2 Connection & access 
 
 - You will need: a TAU account with VPN access + 2FA, and credentials/permission to the
-  specific desktop that hosts the data.
-- The VPN client, the desktop's host/address, and login details are **deliberately not
-  written here** (this file is committed to GitHub). **Obtain them from Ori or TAU IT.**
+  specific desktop that hosts the data. This is done through GlobalProtect.
+- You will need to install Google Authenticator on your phone for the VPN
+  connection and NetIQ Authenticator for the remote desktop connection.
+- Just ask Ludmila (`ludmilap@tauex.tau.ac.il`) for help setting this up.
 - Connect to the VPN first, then open a Remote Desktop session to the host. Close the
   session when you are done.
+- Set the desktop to lock after 10 minutes and require a password to wake — this is **not**
+  the default TAU configuration, so you'll need to change it yourself.
 
 ### 7.3 Environment setup on the secure machine
 
-- **R + RStudio** (RStudio recommended; there is a `.Rproj` for the project).
+- **Check R, RStudio, and GitHub Desktop are actually installed under your own Windows
+  account** . Any git
+  client works instead of GitHub Desktop if you prefer the CLI (§10).
 - **R packages used by the pipeline** (install once):
   `tidyverse`, `haven`, `readxl`, `scales`, `forcats`, `modelsummary`, `glmnet`,
   `knitr`, `kableExtra`. (`data.table` appears only in exploratory scripts.)
@@ -736,13 +757,17 @@ throughout this guide.
   install.packages(c("tidyverse","haven","readxl","scales","forcats",
                      "modelsummary","glmnet","knitr","kableExtra"))
   ```
-- **Get the code onto the machine:** clone from GitHub and `git pull` to update (see §10).
-  The *code* may live on the secure machine; the *data* lives only in the approved location.
+- **Get the code onto the machine:** Selective-Sync the `division-of-labor` folder here
+  alongside the data, then pick it up with GitHub Desktop's "Add local repository" rather
+  than cloning (§10). The raw SL *data* still only ever lives in the approved local-disk
+  location (§5.5) — this step is purely about the code.
 - **Set paths:** add/confirm your machine's branch in `code/lib/config.R` (§5.4) so
   `path_main_*`, `path_covid`, and `data_out_root` point at the right places.
 
 ### 7.4 Run workflow
-Always start from the repo root (so relative paths like `code/lib/config.R` resolve).
+Always open the project via the `.Rproj` file (not by opening R/RStudio separately and
+navigating there) — this sets the working directory to the repo root, so relative paths like
+`code/lib/config.R` resolve correctly.
 
 1. **Pre-flight check** — confirms scripts, policy files, raw data, and output folders
    exist (and creates output folders):
@@ -843,13 +868,36 @@ the decks; treat them as generated.
 
 This repo has **two remotes**: `origin` (GitHub) and `overleaf` (Overleaf — see §11).
 
-**One-time setup**
+**One-time setup: use "Add local repository", not "Clone".** The `division-of-labor` repo is
+Dropbox-synced on every machine on this project, including the run/SL machine (§7). It
+therefore already arrives fully formed — `.git/` and full history included — as soon as
+you're added to the shared Dropbox folder and it finishes syncing.
+
+1. Get added to the shared Dropbox folder; wait for the sync to fully finish (check that
+   `.git/` itself is present, not just the visible files — Dropbox can take a while on a
+   repo this size).
+2. In **GitHub Desktop**: **File → Add local repository...** (*not* "Clone repository...")
+   and point it at the already-synced folder — this recognizes the existing repo in place,
+   with no download or re-fetch. Using the git CLI instead: just `cd` into the synced folder
+   (`git status` will work immediately); run `git config user.name`/`user.email` if this is a
+   new machine.
+3. Get added as a collaborator on the GitHub repo (`origin`) so you can push/pull, and
+   confirm `git status` / `git log` look sane before doing anything.
+
+Only fall back to a plain `git clone` if a machine has no access to the shared Dropbox
+folder:
 ```bash
 git clone https://github.com/Ori-Shoham/division-of-labor.git
 cd division-of-labor
 git config user.name  "Your Name"
 git config user.email "you@example.com"
 ```
+
+Avoid running git commands from two machines against their own local Dropbox copies of this
+folder at the same time — that's the one way Dropbox and git can conflict with each other.
+When a role passes from one person to another, the outgoing person should stop
+committing/pulling once the incoming person is confirmed working; passive Dropbox
+syncing/browsing afterward is harmless.
 
 **Everyday loop**
 ```bash
@@ -886,7 +934,7 @@ overleaf  https://git.overleaf.com/<project-id>   (fetch/push)
 branch ↔ our content.)
 
 **How the two remotes relate.** GitHub (`origin`) is the source of truth for **code +
-TeX**. Overleaf is where co-authors **edit the TeX in the browser**. Changes therefore flow
+TeX** . Overleaf is where co-authors **edit the TeX in the browser**. Changes therefore flow
 both ways and must be reconciled by hand. The `overleaf-backup` branch and the dated
 `overleaf-YYYY-MM-DD-HHMM` branches in the history are snapshots taken at each sync so a bad
 merge can be recovered.
@@ -944,12 +992,9 @@ side, the safest habit is: **regenerate assets → commit to GitHub → push to 
     no path to read even if asked. That's why this checkout has no data present, and why
     `00_check_inputs.R` will report the data roots missing if you run it here (expected —
     don't "fix" it).
-  - **Practical setup: keep the two roles on separate machines.** Use a machine with no AI
-    coding tools installed (see §5.2) as your "run machine" — Selective-Sync the full data
-    folder there and run the pipeline from it. Use a different machine as your "coding
-    machine" for Claude Code/Codex — Selective-Sync the repo there but deselect the data
-    folder. Don't try to toggle one machine between the two states; that's exactly the kind
-    of manual step that eventually gets forgotten.
+  - **Practical setup: keep the two roles on separate machines** — the coding machine and
+    run machine described in §5.2. Don't try to toggle one machine between the two states;
+    that's exactly the kind of manual step that eventually gets forgotten.
   - **Selective Sync generally, not just for the data folder:** on either machine, only sync
     the project folders you actually need, not your entire Dropbox account — an unrelated
     full-account sync wastes local disk space and makes it harder to reason about what an AI

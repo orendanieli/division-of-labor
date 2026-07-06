@@ -41,14 +41,18 @@ if (!DATA_LICENSE %in% c("EUL", "SL")) {
 # Main study: EUL = UKDA-6614, SL = UKDA-6931. The two editions share identical
 # file names, wave prefixes and value coding; the SL edition simply adds the
 # detailed variables. COVID study path is the same regardless of licence.
+#
+# SL data must NEVER be stored in Dropbox (or any cloud sync) — only on the local disk of
+# the approved secure machine, under your own Windows account there. path_main_sl is a
+# placeholder; set it to your account's real local path once SL access is granted.
 path_main_eul <- "C:/Users/USER/Dropbox/WFH_covid/UK project/understanding society uk all data/UKDA-6614-stata/stata/stata14_se/ukhls"
-path_main_sl  <- "C:/Users/USER/Dropbox/WFH_covid/UK project/understanding society uk all data/UKDA-6931-stata/stata/stata14_se/ukhls"
+path_main_sl  <- "C:/Users/USER/sl_secure_data/understanding society uk all data/UKDA-6931-stata/stata/stata14_se/ukhls"
 path_covid    <- "C:/Users/USER/Dropbox/WFH_covid/UK project/understanding society uk all data/UKDA-8644-stata/stata/stata13_se/"
 
 if(user == "orishoham"){
   dropbox_path <- "C:/Users/orishoham/Dropbox/"
   path_main_eul <- paste0(dropbox_path,"WFH_covid/UK project/understanding society uk all data/UKDA-6614-stata/stata/stata14_se/ukhls")
-  path_main_sl  <- paste0(dropbox_path,"WFH_covid/UK project/understanding society uk all data/UKDA-6931-stata/stata/stata14_se/ukhls")
+  path_main_sl  <- "C:/Users/orishoham/sl_secure_data/understanding society uk all data/UKDA-6931-stata/stata/stata14_se/ukhls"
   path_covid    <- paste0(dropbox_path,"WFH_covid/UK project/understanding society uk all data/UKDA-8644-stata/stata/stata13_se/")
 }
 
@@ -121,12 +125,20 @@ REAL_PAY_BASE_YM <- as.Date("2019-12-01")
 #   "D:/protected_outputs/ukhls_project"
 #   "E:/encrypted_drive/ukhls_outputs"
 #   "C:/Users/USER/Documents/protected/ukhls_outputs"
-data_out_root <- "C:/Users/USER/Dropbox/WFH_covid/UK project/understanding society uk all data" 
+#
+# EUL derived/samples/cache outputs are fine in Dropbox. SL outputs must NEVER be in
+# Dropbox (or any cloud sync) — only on the secure machine's local disk, under your own
+# account. data_out_root_sl is a placeholder; set it to your account's real local path
+# once SL access is granted.
+data_out_root_eul <- "C:/Users/USER/Dropbox/WFH_covid/UK project/understanding society uk all data"
+data_out_root_sl  <- "C:/Users/USER/sl_secure_data/understanding society uk all data"
 
 if(user == "orishoham"){
-  data_out_root <- paste0(dropbox_path,"WFH_covid/UK project/understanding society uk all data")  
-
+  data_out_root_eul <- paste0(dropbox_path,"WFH_covid/UK project/understanding society uk all data")
+  data_out_root_sl  <- "C:/Users/orishoham/sl_secure_data/understanding society uk all data"
 }
+
+data_out_root <- if (DATA_LICENSE == "SL") data_out_root_sl else data_out_root_eul
 
 # Under data_out_root we keep all non-shareable derived products. These are
 # isolated per licence so an SL build never overwrites the EUL datasets: EUL keeps
