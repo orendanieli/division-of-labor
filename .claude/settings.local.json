@@ -43,7 +43,13 @@
       "PowerShell($rscript = \"C:\\\\Program Files\\\\R\\\\R-4.5.1\\\\bin\\\\Rscript.exe\"; & $rscript -e \"cat\\(R.version.string,'\\\\n'\\); for \\(p in c\\('dplyr','stringr','tidyr','readxl','tidyverse','haven','forcats','scales'\\)\\) cat\\(p, requireNamespace\\(p, quietly=TRUE\\), '\\\\n'\\)\")",
       "Bash(git -C \"/c/Users/USER/Dropbox/WFH_covid/UK project/division-of-labor\" log --oneline -- ONBOARDING.html ONBOARDING.md)",
       "WebFetch(domain:www.understandingsociety.ac.uk)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(git status *)",
+      "Bash(git check-ignore *)",
+      "Bash(awk '/^\\\\|/{c++; next} {if\\(c>0 && c<2\\) print NR-1\": table with only \"c\" row\\(s\\) before break\"; c=0}' ONBOARDING.md)",
+      "Bash(perl -v)",
+      "Bash(python \"C:\\\\Users\\\\USER\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-USER-Dropbox-WFH-covid-UK-project-division-of-labor\\\\a7be3dae-5ced-4f66-ada0-d5e55753c074\\\\scratchpad\\\\link_sections.py\")",
+      "Bash(python3 -c ' *)"
     ]
   }
 }

@@ -45,9 +45,9 @@ if (!DATA_LICENSE %in% c("EUL", "SL")) {
 # SL data must NEVER be stored in Dropbox (or any cloud sync) — only on the local disk of
 # the approved secure machine, under your own Windows account there. path_main_sl is a
 # placeholder; set it to your account's real local path once SL access is granted.
-path_main_eul <- "C:/Users/USER/Dropbox/WFH_covid/UK project/understanding society uk all data/UKDA-6614-stata/stata/stata14_se/ukhls"
-path_main_sl  <- "C:/Users/USER/sl_secure_data/understanding society uk all data/UKDA-6931-stata/stata/stata14_se/ukhls"
-path_covid    <- "C:/Users/USER/Dropbox/WFH_covid/UK project/understanding society uk all data/UKDA-8644-stata/stata/stata13_se/"
+path_main_eul <- "C:/Users/<your-username>/Dropbox/WFH_covid/UK project/understanding society uk all data/UKDA-6614-stata/stata/stata14_se/ukhls"
+path_main_sl  <- "C:/Users/<your-username>/sl_secure_data/understanding society uk all data/UKDA-6931-stata/stata/stata14_se/ukhls"
+path_covid    <- "C:/Users/<your-username>/Dropbox/WFH_covid/UK project/understanding society uk all data/UKDA-8644-stata/stata/stata13_se/"
 
 if(user == "orishoham"){
   dropbox_path <- "C:/Users/orishoham/Dropbox/"
@@ -124,14 +124,14 @@ REAL_PAY_BASE_YM <- as.Date("2019-12-01")
 # Examples:
 #   "D:/protected_outputs/ukhls_project"
 #   "E:/encrypted_drive/ukhls_outputs"
-#   "C:/Users/USER/Documents/protected/ukhls_outputs"
+#   "C:/Users/<your-username>/Documents/protected/ukhls_outputs"
 #
 # EUL derived/samples/cache outputs are fine in Dropbox. SL outputs must NEVER be in
 # Dropbox (or any cloud sync) — only on the secure machine's local disk, under your own
 # account. data_out_root_sl is a placeholder; set it to your account's real local path
 # once SL access is granted.
-data_out_root_eul <- "C:/Users/USER/Dropbox/WFH_covid/UK project/understanding society uk all data"
-data_out_root_sl  <- "C:/Users/USER/sl_secure_data/understanding society uk all data"
+data_out_root_eul <- "C:/Users/<your-username>/Dropbox/WFH_covid/UK project/understanding society uk all data"
+data_out_root_sl  <- "C:/Users/<your-username>/sl_secure_data/understanding society uk all data"
 
 if(user == "orishoham"){
   data_out_root_eul <- paste0(dropbox_path,"WFH_covid/UK project/understanding society uk all data")
