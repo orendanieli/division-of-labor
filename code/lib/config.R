@@ -56,6 +56,12 @@ if(user == "orishoham"){
   path_covid    <- paste0(dropbox_path,"WFH_covid/UK project/understanding society uk all data/UKDA-8644-stata/stata/stata13_se/")
 }
 
+if(user == "royfl"){
+  dropbox_path <- "C:/Users/royfl/Dropbox/"
+    path_main_eul <- paste0(dropbox_path,"WFH_covid/UK project/understanding society uk all data/UKDA-6614-stata/stata/stata14_se/ukhls")
+    path_covid    <- paste0(dropbox_path,"WFH_covid/UK project/understanding society uk all data/UKDA-8644-stata/stata/stata13_se/")
+}
+
 # Active main-wave path follows the licence (main waves only).
 path_main <- if (DATA_LICENSE == "SL") path_main_sl else path_main_eul
 
@@ -136,6 +142,10 @@ data_out_root_sl  <- "C:/Users/<your-username>/sl_secure_data/understanding soci
 if(user == "orishoham"){
   data_out_root_eul <- paste0(dropbox_path,"WFH_covid/UK project/understanding society uk all data")
   data_out_root_sl  <- "C:/Users/orishoham/sl_secure_data/understanding society uk all data"
+}
+
+if(user == "royfl"){
+    data_out_root_eul <- paste0(dropbox_path,"WFH_covid/UK project/understanding society uk all data")
 }
 
 data_out_root <- if (DATA_LICENSE == "SL") data_out_root_sl else data_out_root_eul
